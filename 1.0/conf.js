@@ -12,14 +12,6 @@ KISSY.add(function(S) {
      */
     var DEBUG = location.href.indexOf('mbar-debug=1') > -1;
     var DEBUG_LOG = location.href.indexOf('mbar-debug-log=1') > -1;
-
-    var TB = window.TB;
-    var isDaily = TB && TB.globalToolFn && S.isFunction(TB.globalToolFn.isDaily)
-        // 有通用吊顶的页面下，且引入了global.js
-        ? TB.globalToolFn.isDaily()
-        // 保留这个兼容判断，这里的判断可以严格为 endsWith
-        : ((location.hostname.indexOf('.net') >= 0) || (location.hostname.indexOf('.com.hk') >= 0));
-
     var arr = 'http://gm.mmstat.com'; // log.mmstat.com
 
     /**
@@ -30,19 +22,13 @@ KISSY.add(function(S) {
     var Conf = {
         DEBUG: DEBUG,
         DEBUG_LOG: DEBUG_LOG,
-        // 日常环境判断，安全可靠
-        IS_DAILY: isDaily,
         // 其他配置
         SAM_PV: 1 / 1000,
         //SAM_PV: 1,
-        COMMON_DELAY: 100,
         TIMEOUT_STORAGE: 3 * 1000,
-        AR: arr,
-        //STORAGE_PROXY: 'http://www.tmall.com/go/act/storage-proxy.php',
         STORAGE_PROXY: 'http://g.tbcdn.cn/kissy/gallery/storage/1.0/proxy.html',
-        //STORAGE_PROXY: '../tests/assets/iframe.html',
-        DOMAIN: isDaily ? '.tmall.net' : '.tmall.com',
-        ARR: {
+        //STORAGE_PROXY: 'http://www.tmall.com/go/act/storage-proxy.php',
+        ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
             ST_GET: arr + '/tmallbrand.999.6',
             ST_RM: arr + '/tmallbrand.999.7',

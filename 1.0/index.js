@@ -8,6 +8,10 @@
  * @see js onload http://www.planabc.net/2008/10/31/javascript_ready_onload/
  */
 KISSY.add(function(S, Event, JSON, Conf, U, XD) {
+    if (window.__KS_STORAGE) {
+        return window.__KS_STORAGE;
+    }
+
     var defOpt = {};
     var guid = 0;
 
@@ -198,14 +202,13 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
         }
     });
 
-    return new Storage({
+    var storage = new Storage({
         proxy: Conf.STORAGE_PROXY
     });
 
-    // CASE 这么写，不方便生成文档 
-    /*S.each(['get', 'set', 'remove', 'clear'], function(method) {
-     methods[method] = function(opt) {};
-     });*/
+    window.__KS_STORAGE = storage;
+
+    return storage;
 }, {
     requires: [
         'event',
