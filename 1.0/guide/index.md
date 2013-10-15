@@ -1,6 +1,6 @@
 ## 综述
 
-storage是跨域存储组件，具有如下特性：
+storage 是跨域存储组件，具有如下特性：
 
 0. 兼容 IE 6+；Chrome、Firefox、Safari
 0. 不使用 Flash 方案，完美支持移动浏览器
