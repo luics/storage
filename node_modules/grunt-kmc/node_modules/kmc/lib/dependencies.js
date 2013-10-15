@@ -1,0 +1,66 @@
+/**
+ *
+ * @author: 橘子<daxingplay@gmail.com>
+ * @time: 13-3-12 15:45
+ * @description:
+ */
+
+var UglifyJS = require('uglify-js'),
+    getAst = require('./get-ast');
+
+module.exports = function(inputFile){
+    var ast = getAst(inputFile);
+
+    var deps = [],
+        moduleName = undefined,
+        call_expression = null,
+        obj_expression = null,
+        startTime = +new Date();
+
+    var walker = new UglifyJS.TreeWalker(function(node, descend) {
+        if(node instanceof UglifyJS.AST_Call && (node.start.value == 'KISSY' || node.start.value == 'S') && node.expression && node.expression.property == 'add'){
+            var tmp = call_expression;
+            call_expression = node;
+            descend();
+            call_expression = tmp;
+            return true;
+        }
+
+        if(node instanceof UglifyJS.AST_String && call_expression && obj_expression === null){
+            moduleName = node.getValue();
+//            console.log('Found Module ID: ' + moduleName);
+        }
+
+        if(node instanceof UglifyJS.AST_Lambda && call_expression){
+            var tmp = call_expression;
+            call_expression = null;
+            descend();
+            call_expression = tmp;
+//            console.log('Found Lambda');
+            return true;
+        }
+
+        if(node instanceof UglifyJS.AST_ObjectKeyVal && call_expression && obj_expression === null){
+            if(node.key && node.key === 'requires'){
+//                console.log('Found requires');
+                var tmp = obj_expression;
+                obj_expression = node;
+                descend();
+                obj_expression = null;
+                return true;
+            }
+        }
+
+        if(node instanceof UglifyJS.AST_String && call_expression && obj_expression){
+            var mod = node.getValue();
+            deps.push(mod);
+//            console.log('Found required module: ' + mod);
+        }
+    });
+
+    ast.walk(walker);
+
+//    console.log('Use time: ' + (+ new Date() - startTime));
+
+    return moduleName ? { name: moduleName, deps: deps } :deps;
+};

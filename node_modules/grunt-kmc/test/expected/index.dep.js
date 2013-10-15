@@ -1,0 +1,3 @@
+KISSY.config('modules', {
+ 'assets/index': { requires: ['dom']} 
+});

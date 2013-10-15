@@ -1,0 +1,22 @@
+/**
+ *
+ * @author: 橘子<daxingplay@gmail.com>
+ * @time: 13-3-12 15:45
+ * @description:
+ */
+
+var UglifyJS = require('uglify-js'),
+    fs = require('fs'),
+    _ = require('lodash');
+
+module.exports = function(inputFile){
+    if (!_.isString(inputFile)) return inputFile;
+
+    if (fs.existsSync(inputFile)) {
+        inputFile = fs.readFileSync(inputFile, 'utf-8');
+    }
+
+    return UglifyJS.parse(inputFile, {
+        comments: true
+    });
+};

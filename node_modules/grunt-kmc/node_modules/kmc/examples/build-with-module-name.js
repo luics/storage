@@ -1,0 +1,25 @@
+/**
+ *
+ * @author: daxingplay<daxingplay@gmail.com>
+ * @time: 13-4-7 16:28
+ * @description:
+ */
+
+var kmc = require('../index'),
+    fs = require('fs'),
+    path = require('path'),
+    srcPath = path.resolve(__dirname, '../test/src/'),
+    distPath = path.resolve(__dirname, './dist'),
+    result;
+
+kmc.config({
+    packages: [{
+        name: 'package1',
+        path: srcPath,
+        charset: 'gbk'
+    }]
+});
+
+result = kmc.build('package1/one-package-simple', distPath);
+
+console.log(result);

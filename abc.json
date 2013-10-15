@@ -1,0 +1,14 @@
+{
+    "name": "storage",
+    "version": "1.0",
+    "desc": "跨浏览器跨域存储组件",
+    "cover": "",
+    "tag":"跨浏览器跨域存储,storage,localstorage,userdata",
+    "author": {
+        "name": "鬼道",
+        "email": "xukai.xk@tmall.com",
+        "page": "http://luics.github.io/"
+    },
+    "type": "kissy-gallery",
+    "type-url": "http://gallery.kissyui.com/guide"
+}
