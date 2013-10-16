@@ -2,7 +2,7 @@
  * Util library
  * 工具库
  *
- * @author luics (guidao)
+ * @author luics (鬼道)
  * @date 2013-07-25
  */
 

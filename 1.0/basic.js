@@ -1,6 +1,7 @@
 /**
  * 由数据代理调用
- * @author guidao
+ * 
+ * @author luics (鬼道)
  */
 
 ;

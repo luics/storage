@@ -1,10 +1,11 @@
 /**
  * 由数据代理调用
- * @author guidao
+ * 
+ * @author luics (鬼道)
  */
 KISSY.add('gallery/storage/1.0/proxy', function(S, Event, JSON, XD, Storejs) {
-    var UID_FROM = '__xd_from';
-    var UID_TO = '__xd_to';
+    var UID_FROM = '__ga_xd_from';
+    var UID_TO = '__ga_xd_to';
     var Proxy = {};
     Proxy.init = function() {
         var xd = new XD({

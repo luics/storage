@@ -15,7 +15,7 @@ gallery/storage/1.0/proxy
  * @version 2.0
  * @date: 2013-09-11
  * @author: moming 1.0
- * @author: guidao 2.0
+ * @author luics (鬼道) 2.0
  *   0. IE6、7
  *     0. postMessage 封装
  *     0. IE6、7 实现队列机制，防止告诉通信的数据丢失问题
@@ -297,7 +297,8 @@ KISSY.add('gallery/storage/1.0/xd', function(S, Event, JSON) {
 	
 /**
  * 由数据代理调用
- * @author guidao
+ * 
+ * @author luics (鬼道)
  */
 
 ;
@@ -516,11 +517,12 @@ KISSY.add('gallery/storage/1.0/basic', function(S, JSON) {
 
 /**
  * 由数据代理调用
- * @author guidao
+ * 
+ * @author luics (鬼道)
  */
 KISSY.add('gallery/storage/1.0/proxy', function(S, Event, JSON, XD, Storejs) {
-    var UID_FROM = '__xd_from';
-    var UID_TO = '__xd_to';
+    var UID_FROM = '__ga_xd_from';
+    var UID_TO = '__ga_xd_to';
     var Proxy = {};
     Proxy.init = function() {
         var xd = new XD({

@@ -10,7 +10,7 @@ gallery/storage/1.0/index
 /**
  * 工具栏配置文件
  *
- * @author luics (guidao)
+ * @author luics (鬼道)
  * @date 2013-07-25
  */
 //CASE js编码应该utf8
@@ -19,8 +19,8 @@ KISSY.add('gallery/storage/1.0/conf',function(S) {
     /**
      * CASE 不能使用 ks-debug，巨大的坑，多谢 @游侠 提醒
      */
-    var DEBUG = location.href.indexOf('mbar-debug=1') > -1;
-    var DEBUG_LOG = location.href.indexOf('mbar-debug-log=1') > -1;
+    var DEBUG = location.href.indexOf('if-debug=1') > -1;
+    var DEBUG_LOG = location.href.indexOf('if-debug-log=1') > -1;
     var arr = 'http://gm.mmstat.com'; // log.mmstat.com
 
     /**
@@ -35,8 +35,9 @@ KISSY.add('gallery/storage/1.0/conf',function(S) {
         SAM_PV: 1 / 1000,
         //SAM_PV: 1,
         TIMEOUT_STORAGE: 3 * 1000,
-        STORAGE_PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
-        //STORAGE_PROXY: 'http://www.tmall.com/go/act/storage-proxy.php',
+        PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
+        PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
+        PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
             ST_GET: arr + '/tmallbrand.999.6',
@@ -46,6 +47,7 @@ KISSY.add('gallery/storage/1.0/conf',function(S) {
         K: {// Key
             // Store
             IFRAME: 'iframe',
+            ONLOAD: 'onload',
             XD: 'xd',
             XD_TIMEOUT: 'xdTimeout',
             IFRAME_TIMEOUT: 'iframeTimeout',
@@ -64,7 +66,7 @@ KISSY.add('gallery/storage/1.0/conf',function(S) {
  * Util library
  * 工具库
  *
- * @author luics (guidao)
+ * @author luics (鬼道)
  * @date 2013-07-25
  */
 
@@ -141,7 +143,7 @@ KISSY.add('gallery/storage/1.0/util',function(S, Conf) {
  * @version 2.0
  * @date: 2013-09-11
  * @author: moming 1.0
- * @author: guidao 2.0
+ * @author luics (鬼道) 2.0
  *   0. IE6、7
  *     0. postMessage 封装
  *     0. IE6、7 实现队列机制，防止告诉通信的数据丢失问题
@@ -423,6 +425,9 @@ KISSY.add('gallery/storage/1.0/xd', function(S, Event, JSON) {
 	
 /**
  * 通用数据存储方案
+ * 
+ * @author luics (鬼道)
+ * 
  * CASE 超时做的处理不同于 KISSY.IO，异常情况下同样触发 success，data 为 undefined
  * TODO 使用 appcache 提升 proxy 加载性能，考虑升级等
  *
@@ -435,19 +440,43 @@ KISSY.add('gallery/storage/1.0/index',function(S, Event, JSON, Conf, U, XD) {
         return window.__KS_STORAGE;
     }
 
-    var defOpt = {};
+    var defOpt = {
+
+    };
     var guid = 0;
+    var instance = 0;
 
     /**
      * Storage Class
      * @constructor
-     * @param {Object} opt
-     * @param {Object} opt.proxy
+     * @param {Object} [opt]
+     * @param {Object} [opt.proxy]
+     * @param {Object} [opt.onload]
      * @param {number} [opt.iframeTimeout]
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
+        if (++instance > 1) {
+            //throw 'storage is a singleton';
+            return;
+        }
+
         var me = this;
+        opt = opt || {};
+        var proxy = opt.proxy || Conf.PROXY;
+        switch (proxy) {
+            case 'tmall':
+                proxy = Conf.PROXY_TMALL;
+                break;
+            case 'taobao':
+                proxy = Conf.PROXY_TAOBAO;
+                break;
+            case 'common':
+                proxy = Conf.PROXY;
+                break;
+        }
+        opt.proxy = proxy;
+
         me._opt = S.merge(defOpt, opt);
         me.init();
     };
@@ -461,15 +490,9 @@ KISSY.add('gallery/storage/1.0/index',function(S, Event, JSON, Conf, U, XD) {
 
             var iframe = document.createElement('iframe');
             var style = iframe.style;
-            // 非常神奇，为何 ie 6-10，chrome firefox safari 都 ok
+            // 非常神奇，为何 ie 6-10，chrome firefox safari 都 ok?
 
             style.display = "none";
-            //style.position = "absolute";
-            //style.visibility = "hidden";
-            //style.width = "1px";
-            //style.height = "1px";
-            //style.left = "-1000px";
-            //me.setConf(Conf.K.IFRAME, iframe);
             var iframeTimer = -1;
 
             function initXd(iframeTimeout) {
@@ -480,8 +503,6 @@ KISSY.add('gallery/storage/1.0/index',function(S, Event, JSON, Conf, U, XD) {
                     iframeTimeout: iframeTimeout,
                     timeout: me.getConf(Conf.K.XD_TIMEOUT),
                     receive: function(data) {
-                        //U.log('host', JSON.stringify(data));
-
                         var callbackList = me.getConf(Conf.K.CALLBACK_LIST);
                         var callback = callbackList[data.c];
                         if (callback) {
@@ -504,6 +525,9 @@ KISSY.add('gallery/storage/1.0/index',function(S, Event, JSON, Conf, U, XD) {
                     xd.send(action, '*');
                 });
                 me.setConf(Conf.K.CACHED_ACTION_LIST, []);
+
+                var onloadCb = me.getConf(Conf.K.ONLOAD);
+                onloadCb && onloadCb();
             }
 
             iframeTimer = setTimeout(function() {
@@ -513,6 +537,7 @@ KISSY.add('gallery/storage/1.0/index',function(S, Event, JSON, Conf, U, XD) {
 
             function onload(ev) {
                 U.log('storage proxy loaded');
+
                 // TODO 预留的时间供 KISSY.use，不够可靠，还是得通过 onhashchange 处理
 
                 clearTimeout(iframeTimer);
@@ -625,13 +650,13 @@ KISSY.add('gallery/storage/1.0/index',function(S, Event, JSON, Conf, U, XD) {
         }
     });
 
-    var storage = new Storage({
-        proxy: Conf.STORAGE_PROXY
-    });
+    /*var storage = new Storage({
+     proxy: Conf.STORAGE_PROXY
+     });*/
 
-    window.__KS_STORAGE = storage;
+    window.__KS_STORAGE = Storage;
 
-    return storage;
+    return Storage;
 }, {
     requires: [
         'event',

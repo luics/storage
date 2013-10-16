@@ -1,7 +1,7 @@
 /**
  * 工具栏配置文件
  *
- * @author luics (guidao)
+ * @author luics (鬼道)
  * @date 2013-07-25
  */
 //CASE js编码应该utf8
@@ -10,8 +10,8 @@ KISSY.add(function(S) {
     /**
      * CASE 不能使用 ks-debug，巨大的坑，多谢 @游侠 提醒
      */
-    var DEBUG = location.href.indexOf('mbar-debug=1') > -1;
-    var DEBUG_LOG = location.href.indexOf('mbar-debug-log=1') > -1;
+    var DEBUG = location.href.indexOf('if-debug=1') > -1;
+    var DEBUG_LOG = location.href.indexOf('if-debug-log=1') > -1;
     var arr = 'http://gm.mmstat.com'; // log.mmstat.com
 
     /**
@@ -26,8 +26,9 @@ KISSY.add(function(S) {
         SAM_PV: 1 / 1000,
         //SAM_PV: 1,
         TIMEOUT_STORAGE: 3 * 1000,
-        STORAGE_PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
-        //STORAGE_PROXY: 'http://www.tmall.com/go/act/storage-proxy.php',
+        PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
+        PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
+        PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
             ST_GET: arr + '/tmallbrand.999.6',
@@ -37,6 +38,7 @@ KISSY.add(function(S) {
         K: {// Key
             // Store
             IFRAME: 'iframe',
+            ONLOAD: 'onload',
             XD: 'xd',
             XD_TIMEOUT: 'xdTimeout',
             IFRAME_TIMEOUT: 'iframeTimeout',

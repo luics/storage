@@ -6,7 +6,8 @@ gallery/storage/1.0/basic
 */
 /**
  * 由数据代理调用
- * @author guidao
+ * 
+ * @author luics (鬼道)
  */
 
 ;

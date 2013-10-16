@@ -1,5 +1,8 @@
 /**
  * 通用数据存储方案
+ * 
+ * @author luics (鬼道)
+ * 
  * CASE 超时做的处理不同于 KISSY.IO，异常情况下同样触发 success，data 为 undefined
  * TODO 使用 appcache 提升 proxy 加载性能，考虑升级等
  *
@@ -12,19 +15,43 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
         return window.__KS_STORAGE;
     }
 
-    var defOpt = {};
+    var defOpt = {
+
+    };
     var guid = 0;
+    var instance = 0;
 
     /**
      * Storage Class
      * @constructor
-     * @param {Object} opt
-     * @param {Object} opt.proxy
+     * @param {Object} [opt]
+     * @param {Object} [opt.proxy]
+     * @param {Object} [opt.onload]
      * @param {number} [opt.iframeTimeout]
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
+        if (++instance > 1) {
+            //throw 'storage is a singleton';
+            return;
+        }
+
         var me = this;
+        opt = opt || {};
+        var proxy = opt.proxy || Conf.PROXY;
+        switch (proxy) {
+            case 'tmall':
+                proxy = Conf.PROXY_TMALL;
+                break;
+            case 'taobao':
+                proxy = Conf.PROXY_TAOBAO;
+                break;
+            case 'common':
+                proxy = Conf.PROXY;
+                break;
+        }
+        opt.proxy = proxy;
+
         me._opt = S.merge(defOpt, opt);
         me.init();
     };
@@ -38,15 +65,9 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
 
             var iframe = document.createElement('iframe');
             var style = iframe.style;
-            // 非常神奇，为何 ie 6-10，chrome firefox safari 都 ok
+            // 非常神奇，为何 ie 6-10，chrome firefox safari 都 ok?
 
             style.display = "none";
-            //style.position = "absolute";
-            //style.visibility = "hidden";
-            //style.width = "1px";
-            //style.height = "1px";
-            //style.left = "-1000px";
-            //me.setConf(Conf.K.IFRAME, iframe);
             var iframeTimer = -1;
 
             function initXd(iframeTimeout) {
@@ -57,8 +78,6 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
                     iframeTimeout: iframeTimeout,
                     timeout: me.getConf(Conf.K.XD_TIMEOUT),
                     receive: function(data) {
-                        //U.log('host', JSON.stringify(data));
-
                         var callbackList = me.getConf(Conf.K.CALLBACK_LIST);
                         var callback = callbackList[data.c];
                         if (callback) {
@@ -81,6 +100,9 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
                     xd.send(action, '*');
                 });
                 me.setConf(Conf.K.CACHED_ACTION_LIST, []);
+
+                var onloadCb = me.getConf(Conf.K.ONLOAD);
+                onloadCb && onloadCb();
             }
 
             iframeTimer = setTimeout(function() {
@@ -90,6 +112,7 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
 
             function onload(ev) {
                 U.log('storage proxy loaded');
+
                 // TODO 预留的时间供 KISSY.use，不够可靠，还是得通过 onhashchange 处理
 
                 clearTimeout(iframeTimer);
@@ -202,13 +225,13 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
         }
     });
 
-    var storage = new Storage({
-        proxy: Conf.STORAGE_PROXY
-    });
+    /*var storage = new Storage({
+     proxy: Conf.STORAGE_PROXY
+     });*/
 
-    window.__KS_STORAGE = storage;
+    window.__KS_STORAGE = Storage;
 
-    return storage;
+    return Storage;
 }, {
     requires: [
         'event',

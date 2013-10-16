@@ -13,7 +13,7 @@ gallery/storage/1.0/xd
  * @version 2.0
  * @date: 2013-09-11
  * @author: moming 1.0
- * @author: guidao 2.0
+ * @author luics (鬼道) 2.0
  *   0. IE6、7
  *     0. postMessage 封装
  *     0. IE6、7 实现队列机制，防止告诉通信的数据丢失问题

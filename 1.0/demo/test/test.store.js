@@ -1,11 +1,23 @@
+/**
+ * 单元测试
+ *
+ * @author luics (鬼道)
+ */
+
 KISSY.use('ua, gallery/storage/1.0/index', function(S, UA, Storage) {
     module('gallery/storage/1.0/index');
 
+    var storage = new Storage();
+//    var storage = new Storage({proxy:'tmall'});
+//    var storage = new Storage({proxy:'taobao'});
+//    var storage = new Storage({proxy:'common'});
+//    var storage = new Storage({proxy: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html' });
+    
     var K11 = 'K11';
     var V11 = 'V11';
 
     test('load', function() {
-        ok(typeof Storage !== 'undefined');
+        ok(typeof storage !== 'undefined');
     });
 
     function testCase(k, v, exp) {
@@ -13,9 +25,9 @@ KISSY.use('ua, gallery/storage/1.0/index', function(S, UA, Storage) {
         var eq = (typeof exp === 'object' ? deepEqual : equal);
 
         stop();
-        Storage.set({k: k, v: v, success: function(data) {
+        storage.set({k: k, v: v, success: function(data) {
             eq(data, exp);
-            Storage.get({k: k, success: function(data) {
+            storage.get({k: k, success: function(data) {
                 eq(data, exp);
                 start();
             }});
@@ -51,13 +63,13 @@ KISSY.use('ua, gallery/storage/1.0/index', function(S, UA, Storage) {
 
     test("remove/clear", function() {
         stop();
-        Storage.remove({k: K11, success: function(data) {
+        storage.remove({k: K11, success: function(data) {
             equal(data, undefined);
-            Storage.get({k: K11, success: function(data) {
+            storage.get({k: K11, success: function(data) {
                 equal(data, undefined);
 
-                Storage.clear({success: function() {
-                    Storage.get({k: K11, success: function(data) {
+                storage.clear({success: function() {
+                    storage.get({k: K11, success: function(data) {
                         equal(data, undefined);
                         start();
                     }});
