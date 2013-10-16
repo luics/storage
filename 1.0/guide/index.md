@@ -21,7 +21,7 @@ KISSY.config({
     packages:[
         {
             name:"gallery",
-            path:"http://g.tbcdn.cn/kissy/",
+            path:"http://a.tbcdn.cn/s/kissy/",
             charset:"utf-8"
         }
     ]
