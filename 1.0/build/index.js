@@ -35,7 +35,7 @@ KISSY.add('gallery/storage/1.0/conf',function(S) {
         SAM_PV: 1 / 1000,
         //SAM_PV: 1,
         TIMEOUT_STORAGE: 3 * 1000,
-        STORAGE_PROXY: 'http://g.tbcdn.cn/kissy/gallery/storage/1.0/proxy.html',
+        STORAGE_PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
         //STORAGE_PROXY: 'http://www.tmall.com/go/act/storage-proxy.php',
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
