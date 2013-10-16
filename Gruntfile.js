@@ -80,7 +80,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: '<%= pkg.version %>',
-                        src: ['**/*.css', '**/*.html'],
+                        src: ['*.html'], // , '!build/', '!demo'
                         dest: '<%= pkg.version %>/build'
                     }
                 ]
@@ -89,13 +89,13 @@ module.exports = function(grunt) {
         cssmin: {
             main: {
                 files: [
-                    {
-                        expand: true,
-                        cwd: '<%= pkg.version %>/build',
-                        src: ['**/*.css', '!**/*-min.css'],
-                        dest: '<%= pkg.version %>/build',
-                        ext: '-min.css'
-                    }
+//                    {
+//                        expand: true,
+//                        cwd: '<%= pkg.version %>/build',
+//                        src: ['**/*.css', '!**/*-min.css'],
+//                        dest: '<%= pkg.version %>/build',
+//                        ext: '-min.css'
+//                    }
                 ]
             }
         }
