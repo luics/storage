@@ -1,8 +1,8 @@
 /**
  * 通用数据存储方案
- * 
+ *
  * @author luics (鬼道)
- * 
+ *
  * CASE 超时做的处理不同于 KISSY.IO，异常情况下同样触发 success，data 为 undefined
  * TODO 使用 appcache 提升 proxy 加载性能，考虑升级等
  *
@@ -25,8 +25,9 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
      * Storage Class
      * @constructor
      * @param {Object} [opt]
-     * @param {Object} [opt.proxy]
-     * @param {Object} [opt.onload]
+     * @param {Object} [opt.proxy] 代理页，`common`|`tmall`|`taobao`|`{自定义地址}`
+     * @param {Object} [opt.onload] 代理页加载成功时的回调
+     * @param {Object} [opt.prefix] 数据存储 key 的前缀
      * @param {number} [opt.iframeTimeout]
      * @param {number} [opt.xdTimeout]
      */
@@ -51,6 +52,7 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
                 break;
         }
         opt.proxy = proxy;
+        opt.prefix = opt.prefix || '';
 
         me._opt = S.merge(defOpt, opt);
         me.init();
@@ -153,8 +155,9 @@ KISSY.add(function(S, Event, JSON, Conf, U, XD) {
             var callbackList = me.getConf(Conf.K.CALLBACK_LIST);
             var cachedActionList = me.getConf(Conf.K.CACHED_ACTION_LIST);
             var proxyReady = me.getConf(Conf.K.PROXY_READY);
+            var prefix = me.getConf(Conf.K.PREFIX);
 
-            action.p = 'mui/mallbar';
+            action.p = prefix;
             if (S.isFunction(action.success)) {
                 var token = 'token' + (++guid);
                 action.c = token;

@@ -8,6 +8,7 @@ KISSY.use('ua, gallery/storage/1.1/index', function(S, UA, Storage) {
     module('gallery/storage/1.1/index');
 
     var storage = new Storage({
+        prefix: 'test/adv',
         onload: function() {
             test("set/get 高并发", function() {
                 var xd = storage.getConf('xd');

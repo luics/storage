@@ -43,13 +43,15 @@ KISSY.add('gallery/storage/1.1/conf',function(S) {
             ST_CL: arr + '/tmallbrand.999.8'
         },
         K: {// Key
-            // Store
-            IFRAME: 'iframe',
+            // param
             ONLOAD: 'onload',
-            XD: 'xd',
+            PROXY: 'proxy',
+            PREFIX: 'prefix',
             XD_TIMEOUT: 'xdTimeout',
             IFRAME_TIMEOUT: 'iframeTimeout',
-            PROXY: 'proxy',
+            // other
+            IFRAME: 'iframe',
+            XD: 'xd',
             CALLBACK_LIST: 'callbackList',
             CACHED_ACTION_LIST: 'cachedActionList',
             PROXY_READY: 'proxyReady'
