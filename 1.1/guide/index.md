@@ -16,6 +16,8 @@ storage 是跨终端、跨域的存储组件：
 
 ## 组件使用
 
+> Kissy 1.3+ 无需此段代码
+
 ```javascript
 KISSY.config({
     packages:[
@@ -92,3 +94,20 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
     0. `{proxy-url}`：[proxy 页面](http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html) 部署在特定域名下的 URL
 0. `onload` 代理页加载成功的回调    
     
+## 建议
+
+### 推荐命名
+
+命名规则
+
+* 推荐小骆驼（首字母小写其他词首大写），如`myFieldName`
+
+防冲突机制
+
+* 推荐类文件路径格式`xx/yy/zz`
+* 阿里系较熟悉的 package name 可以直接作为前缀
+* 没有 package 的场景下可以使用`应用/子应用/数据字段名`
+    
+### 存储上限
+
+参见[此处讨论](https://github.com/luics/storage/wiki/Storage#%E5%AD%98%E5%82%A8%E4%B8%8A%E9%99%90)
