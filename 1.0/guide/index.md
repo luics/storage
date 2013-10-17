@@ -35,6 +35,7 @@ KISSY.config({
 ```javascript
 S.use('gallery/storage/1.0/index', function (S, Storage) {
     
+    // 单例，无需多次实例化
     var storage = new Storage();
     
     storage.set({k: 'key', v: 'value', success: function() {
@@ -55,6 +56,7 @@ S.use('gallery/storage/1.0/index', function (S, Storage) {
 ```javascript
 S.use('gallery/storage/1.0/index', function (S, Storage) {  
 
+    // 单例，无需多次实例化
     var storage = new Storage();
     
     // 删除数据'key' 
@@ -72,11 +74,14 @@ S.use('gallery/storage/1.0/index', function (S, Storage) {
 ```javascript
 S.use('gallery/storage/1.0/index', function (S, Storage) {
     
+    // 单例，无需多次实例化
     var storage = new Storage({
         'proxy': 'tmall' 
     });
 });
 ```
+
+注： Storage 是单例模式，无需多次实例化
 
 所有实例化参数都是可选的：
 
