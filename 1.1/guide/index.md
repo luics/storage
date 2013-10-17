@@ -85,8 +85,9 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 
 注： Storage 是单例模式，无需多次实例化
 
-所有实例化参数都是可选的：
+所有参数均为可选：
 
+0. `prefix` key 前缀，详见下文“推荐命名”
 0. `proxy` 数据存储在代理页所在的域，选择不同的代理页可以让数据存储在不同的域下
     0. `common`：(默认) http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html 
     0. `tmall`：http://www.tmall.com/go/act/stp-tm.php
