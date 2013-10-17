@@ -86,9 +86,9 @@ S.use('gallery/storage/1.0/index', function (S, Storage) {
 所有实例化参数都是可选的：
 
 0. `proxy` 数据存储在代理页所在的域，选择不同的代理页可以让数据存储在不同的域下
-    0. `tmall`：
-    0. `taobao`：
-    0. `common`：
+    0. `common`：(默认) http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html 
+    0. `tmall`：http://www.tmall.com/go/act/stp-tm.php
+    0. `taobao`：http://www.taobao.com/go/act/stp-tb.php
     0. `{proxy-url}`：[proxy 页面](http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html) 部署在特定域名下的 URL
 0. `onload` 代理页加载成功的回调    
     
