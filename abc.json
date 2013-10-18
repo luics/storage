@@ -1,7 +1,7 @@
 {
     "name": "storage",
     "version": "1.1",
-    "desc": "跨浏览器跨域存储组件",
+    "desc": "跨终端、跨域的存储组件",
     "cover": "",
     "tag": "跨终端,跨域,存储,storage,localstorage,userdata",
     "author": {
