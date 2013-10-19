@@ -94,10 +94,8 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
     0. `taobao`：http://www.taobao.com/go/act/stp-tb.php
     0. `{proxy-url}`：[proxy 页面](http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html) 部署在特定域名下的 URL
 0. `onload` 代理页加载成功的回调    
-    
-## 建议
 
-### 推荐命名
+## 推荐命名
 
 命名规则
 
@@ -109,6 +107,20 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 * 阿里系较熟悉的 package name 可以直接作为前缀
 * 没有 package 的场景下可以使用`应用/子应用/数据字段名`
     
-### 存储上限
+## 存储上限
 
-参见[此处讨论](https://github.com/luics/storage/wiki/Storage#%E5%AD%98%E5%82%A8%E4%B8%8A%E9%99%90)
+> 参见[此处讨论](https://github.com/luics/storage/wiki/Storage#%E5%AD%98%E5%82%A8%E4%B8%8A%E9%99%90)
+
+如果希望独享存储空间，可以：
+
+0. 代理页部署至特定域
+0. 实例化 Storage 设置代理页地址参数`proxy`
+
+## 安全
+
+由于数据存储在代理页（proxy）所在的域，数据可被所有能够加载代理页的宿主页面访问。
+
+如果不希望存储的数据被第3方访问，可以：
+
+0. 代理页部署至特定服务器、服务器端控制访问来源
+0. 实例化 Storage 设置代理页地址参数`proxy`
