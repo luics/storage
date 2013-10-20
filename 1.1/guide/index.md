@@ -16,7 +16,7 @@ storage 是跨终端、跨域的存储组件：
 
 ## 组件使用
 
-> Kissy 1.3+ 无需此段代码
+> Kissy 1.3.0+ 无需此段代码
 
 ```javascript
 KISSY.config({
@@ -50,7 +50,7 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 
 0. `k` key
 0. `v` value
-0. `success` 回调，如遇超时等异常，参数`data`为`undefined`
+0. `success` 回调，如遇超时等异常，参数`data`为`undefined`，详见[此处讨论](https://github.com/luics/storage/wiki/Storage#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
 
 
 ### remove/clear
@@ -118,7 +118,7 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 
 ## 安全
 
-由于数据存储在代理页（proxy）所在的域，数据可被所有能够加载代理页的宿主页面访问。
+> 参见[此处讨论](https://github.com/luics/storage/wiki/Storage#%E5%AE%89%E5%85%A8%E6%80%A7)
 
 如果不希望存储的数据被第3方访问，可以：
 
