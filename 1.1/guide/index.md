@@ -10,7 +10,7 @@ storage 是跨终端、跨域的存储组件：
 
 更多信息
 
-* [Demo](http://gallery.kissyui.com/storage/1.0/demo/index.html)
+* [Demo](http://gallery.kissyui.com/storage/1.1/demo/index.html)
 * [技术方案详解](https://github.com/luics/storage/wiki/Storage)
 * 作者：鬼道
 
@@ -113,7 +113,7 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 
 如果希望独享存储空间，可以：
 
-0. 代理页部署至特定域
+0. [代理页](http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html)部署至特定域
 0. 实例化 Storage 设置代理页地址参数`proxy`
 
 ## 安全
