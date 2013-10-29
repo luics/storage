@@ -1,6 +1,6 @@
 /**
  * 由数据代理调用
- *
+ * 
  * @author luics (鬼道)
  */
 
@@ -9,7 +9,7 @@
  * 封装 store.js
  * @see https://github.com/marcuswestin/store.js
  */
-KISSY.add('gallery/storage/1.0/basic', function(S, JSON) {
+KISSY.add('gallery/storage/1.1/basic', function(S, JSON) {
     // 考虑到 ls 和 user data 均失效的情况
     window.JSON = window.JSON || JSON;
 
@@ -126,21 +126,20 @@ KISSY.add('gallery/storage/1.0/basic', function(S, JSON) {
             }
             function withIEStorage(storeFunction) {
                 return function() {
-                    // FIXED why? unshift load 均报过错
-
+                    var args = Array.prototype.slice.call(arguments, 0)
+                    args.unshift(storage)
+                    // See http://msdn.microsoft.com/en-us/library/ms531081(v=VS.85).aspx
+                    // and http://msdn.microsoft.com/en-us/library/ms531424(v=VS.85).aspx
+                    storageOwner.appendChild(storage)
+                    storage.addBehavior('#default#userData')
+                    // FIXED why?
                     try {
-                        var args = Array.prototype.slice.call(arguments, 0)
-                        args.unshift(storage)
-                        // See http://msdn.microsoft.com/en-us/library/ms531081(v=VS.85).aspx
-                        // and http://msdn.microsoft.com/en-us/library/ms531424(v=VS.85).aspx
-                        storageOwner.appendChild(storage)
-                        storage.addBehavior('#default#userData')
                         storage.load(localStorageName)
-                        var result = storeFunction.apply(store, args)
-                        storageOwner.removeChild(storage)
-                        return result
                     } catch (e) {
                     }
+                    var result = storeFunction.apply(store, args)
+                    storageOwner.removeChild(storage)
+                    return result
                 }
             }
 
