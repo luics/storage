@@ -29,6 +29,7 @@ KISSY.add(function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        MINER: 'http://log.mmstat.com/ued.1.1.2?type=9&_gm:id=storage&d={0}',
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
             ST_GET: arr + '/tmallbrand.999.6',
