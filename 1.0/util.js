@@ -6,7 +6,7 @@
  * @date 2013-07-25
  */
 
-KISSY.add(function(S, Conf) {
+KISSY.add('gallery/storage/1.0/util', function(S, Conf) {
 
     var Seed = {
         /**
@@ -57,10 +57,10 @@ KISSY.add(function(S, Conf) {
      * 黄金令箭埋点
      */
     U.sendLog = function(url) {
-        U.send(U.fm(Conf.MINER, encodeURIComponent(location.href)));
+        U.send(U.fm(Conf.M.G, encodeURIComponent(location.href)));
         U.send(url);
     };
-    
+
     /**
      * 黄金令箭埋点
      */
