@@ -7,12 +7,14 @@
 KISSY.use('ua, gallery/storage/1.0/index', function(S, UA, Storage) {
     module('gallery/storage/1.0/index');
 
-    var storage = new Storage();
+    var storage = new Storage({
+        //proxy: 'http://10.68.140.98/proj/storage/1.0/demo/test/assets/proxy-local.html'
+    });
 //    var storage = new Storage({proxy:'tmall'});
 //    var storage = new Storage({proxy:'taobao'});
 //    var storage = new Storage({proxy:'common'});
 //    var storage = new Storage({proxy: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html' });
-    
+
     var K11 = 'K11';
     var V11 = 'V11';
 
