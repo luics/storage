@@ -36,6 +36,7 @@ KISSY.add('gallery/storage/1.0/conf',function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        MINER: 'http://log.mmstat.com/ued.1.1.2?type=9&_gm:id=storage&d={0}',
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
             ST_GET: arr + '/tmallbrand.999.6',
@@ -119,11 +120,24 @@ KISSY.add('gallery/storage/1.0/util',function(S, Conf) {
      * 黄金令箭埋点
      */
     U.sendLog = function(url) {
+        U.send(U.fm(Conf.MINER, encodeURIComponent(location.href)));
+        U.send(url);
+    };
+    
+    /**
+     * 黄金令箭埋点
+     */
+    U.send = function(url) {
         if (!url) {
             return;
         }
+        var id = "__st_" + (+new Date) + Math.random();
         var img = new Image();
-        img.src = url;
+        window[id] = img;
+        img.src = U.fm('{0}{1}r{2}=1', url, (url.indexOf('?') > -1 ? '&' : '?'), +new Date);
+        img.onload = function() {
+            window[id] = null;
+        }
     };
 
     // end  
