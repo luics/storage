@@ -533,7 +533,7 @@ KISSY.add('gallery/storage/1.0/conf', function(S) {
     var DEBUG = location.href.indexOf('if-debug=1') > -1;
     var DEBUG_LOG = location.href.indexOf('if-debug-log=1') > -1;
     var arr = 'http://gm.mmstat.com'; // log.mmstat.com
-    var MINER = 'http://log.mmstat.com/ued.1.1.2?type=9&_gm:id=storage&v=1.0&d={0}';
+    var MINER = 'http://log.mmstat.com/ued.1.1.2?type=9&_gm:id=storage&v=1.0';
 
     /**
      * 需要 Conf 的理由：
