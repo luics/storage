@@ -4,10 +4,14 @@
  * @author luics (鬼道)
  */
 
-KISSY.use('ua, gallery/storage/1.1/index', function(S, UA, Storage) {
+KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S, UA, Storage, Conf) {
     module('gallery/storage/1.1/index');
 
+    // 强制发送 log
+    Conf.SAM_PV = 1;
+
     var storage = new Storage({
+        proxy: 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html',
         prefix: 'test/basic'
     });
 //    var storage = new Storage({proxy:'tmall'});

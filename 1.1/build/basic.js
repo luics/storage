@@ -132,7 +132,8 @@ KISSY.add('gallery/storage/1.1/basic', function(S, JSON) {
             }
             function withIEStorage(storeFunction) {
                 return function() {
-                    // FIXED why?
+                    // FIXED why? unshift load 均报过错
+
                     try {
                         var args = Array.prototype.slice.call(arguments, 0)
                         args.unshift(storage)

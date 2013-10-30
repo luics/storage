@@ -6,7 +6,7 @@
  * @date 2013-07-25
  */
 
-KISSY.add(function(S, Conf) {
+KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
 
     var Seed = {
         /**
@@ -57,11 +57,24 @@ KISSY.add(function(S, Conf) {
      * 黄金令箭埋点
      */
     U.sendLog = function(url) {
+        U.send(U.fm(Conf.M.G, encodeURIComponent(location.href)));
+        U.send(url);
+    };
+
+    /**
+     * 黄金令箭埋点
+     */
+    U.send = function(url) {
         if (!url) {
             return;
         }
+        var id = "__st_" + (+new Date) + Math.random();
         var img = new Image();
-        img.src = url;
+        window[id] = img;
+        img.src = U.fm('{0}{1}r{2}=1', url, (url.indexOf('?') > -1 ? '&' : '?'), +new Date);
+        img.onload = function() {
+            window[id] = null;
+        }
     };
 
     // end  

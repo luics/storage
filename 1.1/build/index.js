@@ -14,7 +14,7 @@ gallery/storage/1.1/index
  * @date 2013-07-25
  */
 //CASE js编码应该utf8
-KISSY.add('gallery/storage/1.1/conf',function(S) {
+KISSY.add('gallery/storage/1.1/conf', function(S) {
 
     /**
      * CASE 不能使用 ks-debug，巨大的坑，多谢 @游侠 提醒
@@ -22,6 +22,7 @@ KISSY.add('gallery/storage/1.1/conf',function(S) {
     var DEBUG = location.href.indexOf('if-debug=1') > -1;
     var DEBUG_LOG = location.href.indexOf('if-debug-log=1') > -1;
     var arr = 'http://gm.mmstat.com'; // log.mmstat.com
+    var MINER = 'http://log.mmstat.com/ued.1.1.2?type=9&_gm:id=storage&v=1.1';
 
     /**
      * 需要 Conf 的理由：
@@ -38,6 +39,10 @@ KISSY.add('gallery/storage/1.1/conf',function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        M: {
+            G: MINER + '&t=g',
+            P: MINER + '&t=p'
+        },
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
             ST_GET: arr + '/tmallbrand.999.6',
@@ -72,7 +77,7 @@ KISSY.add('gallery/storage/1.1/conf',function(S) {
  * @date 2013-07-25
  */
 
-KISSY.add('gallery/storage/1.1/util',function(S, Conf) {
+KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
 
     var Seed = {
         /**
@@ -123,11 +128,24 @@ KISSY.add('gallery/storage/1.1/util',function(S, Conf) {
      * 黄金令箭埋点
      */
     U.sendLog = function(url) {
+        U.send(U.fm(Conf.M.G, encodeURIComponent(location.href)));
+        U.send(url);
+    };
+
+    /**
+     * 黄金令箭埋点
+     */
+    U.send = function(url) {
         if (!url) {
             return;
         }
+        var id = "__st_" + (+new Date) + Math.random();
         var img = new Image();
-        img.src = url;
+        window[id] = img;
+        img.src = U.fm('{0}{1}r{2}=1', url, (url.indexOf('?') > -1 ? '&' : '?'), +new Date);
+        img.onload = function() {
+            window[id] = null;
+        }
     };
 
     // end  
@@ -437,7 +455,7 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
  * @see postMessage https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage
  * @see js onload http://www.planabc.net/2008/10/31/javascript_ready_onload/
  */
-KISSY.add('gallery/storage/1.1/index',function(S, Event, JSON, Conf, U, XD) {
+KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
     if (window.__KS_STORAGE) {
         return window.__KS_STORAGE;
     }

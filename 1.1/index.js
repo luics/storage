@@ -10,7 +10,7 @@
  * @see postMessage https://developer.mozilla.org/en-US/docs/Web/API/window.postMessage
  * @see js onload http://www.planabc.net/2008/10/31/javascript_ready_onload/
  */
-KISSY.add(function(S, Event, JSON, Conf, U, XD) {
+KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
     if (window.__KS_STORAGE) {
         return window.__KS_STORAGE;
     }
