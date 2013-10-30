@@ -11,7 +11,7 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
     Conf.SAM_PV = 1;
 
     var storage = new Storage({
-        proxy: 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html',
+        //proxy: 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html',
         prefix: 'test/basic'
     });
 //    var storage = new Storage({proxy:'tmall'});
