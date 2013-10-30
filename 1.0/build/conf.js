@@ -37,8 +37,8 @@ KISSY.add('gallery/storage/1.0/conf', function(S) {
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
         M: {
-            G: MINER + '&t=g&d={0}',
-            P: MINER + '&t=p&d={0}'
+            G: MINER + '&t=g',
+            P: MINER + '&t=p'
         },
         ARR: {// 黄金令箭埋点
             ST_SET: arr + '/tmallbrand.999.5',
