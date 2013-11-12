@@ -145,41 +145,35 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
      */
     function messageHandler(ev) {
         var data = {};
-
         try {
             data = JSON.parse(ev.data);
         }
         catch (e) {
-            // 不满足格式的数据不考虑继续
-
             return;
         }
 
         // TODO 安全考虑 if(ev.origin == 'http://www.tmall.com'){}
 
-        // 消息格式校验
-
-        if (!(Conf.UID_FROM in data) || !(Conf.UID_TO in data)) {
-            return;
-        }
-
-        var uid = data[Conf.UID_TO];
-        if (uid) {
-            var timer = timeoutList[uid];
-            // timer 被消费掉，说明已经超时了
-
-            clearTimeout(timer);
-            timeoutList[uid] = 0;
-            if (!timer) {
-                return;
-            }
-        }
-
         var token = data[Conf.XD_TOKEN];
         S.each(xdList, function(xd) {
-            //支持多实例共存
-            
-            if (token === xd.get(TOKEN)) {
+            //支持多实例共存，消息格式校验
+
+            if (token === xd.get(TOKEN)
+                && (Conf.UID_FROM in data)
+                && (Conf.UID_TO in data)
+                ) {
+                var uid = data[Conf.UID_TO];
+                if (uid) {
+                    var timer = timeoutList[uid];
+                    // timer 被消费掉，说明已经超时了
+
+                    clearTimeout(timer);
+                    timeoutList[uid] = 0;
+                    if (!timer) {
+                        return;
+                    }
+                }
+
                 xd.get(RECEIVE)(data);
             }
         });

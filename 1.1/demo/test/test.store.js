@@ -9,7 +9,8 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
 
     // 强制发送 log
     //Conf.SAM_PV = 1;
-    var proxy = document.domain.indexOf('luics.com') > -1
+    var DEBUG = document.domain.indexOf('luics.com') > -1;
+    var proxy = DEBUG
         ? 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html'
         : '';
     var prefix = 'test/basic';
@@ -78,6 +79,17 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
         }
     });
 
+    if (!DEBUG) {
+        test("proxy exception", function() {
+            var storage = new Storage({
+                proxy: '/wrong.proxy.url',
+                prefix: prefix
+            });
+
+            testCase('wrong.proxy.url', undefined, undefined, storage);
+        });
+    }
+
     test("remove/clear", function() {
         stop();
         myStorage.remove({k: K11, success: function(data) {
@@ -95,7 +107,6 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
             }});
         }});
     });
-
 
     test("set/get 传输上限", function() {
         //TODO 
