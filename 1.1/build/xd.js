@@ -1,9 +1,178 @@
 /*
 combined files : 
 
+gallery/storage/1.1/conf
+gallery/storage/1.1/util
 gallery/storage/1.1/xd
 
 */
+/**
+ * 工具栏配置文件
+ *
+ * @author luics (鬼道)
+ * @date 2013-07-25
+ */
+//CASE js编码应该utf8
+KISSY.add('gallery/storage/1.1/conf', function(S) {
+
+    /**
+     * CASE 不能使用 ks-debug，巨大的坑，多谢 @游侠 提醒
+     */
+    var DEBUG = location.href.indexOf('if-debug=1') > -1;
+    var DEBUG_LOG = location.href.indexOf('if-debug-log=1') > -1;
+    var arr = 'http://gm.mmstat.com'; // log.mmstat.com
+    var MINER = 'http://log.mmstat.com/ued.1.1.2?type=9&_gm:id=storage&v=1.1';
+
+    /**
+     * 需要 Conf 的理由：
+     * 1. 全局防止命名冲突
+     * 2. 集中管理事件、状态值，便于形成文档，方便多人维护
+     */
+    var Conf = {
+        DEBUG: DEBUG,
+        DEBUG_LOG: DEBUG_LOG,
+        // 其他配置
+        SAM_PV: 1 / 1000,
+        //SAM_PV: 1,
+        TIMEOUT_STORAGE: 3 * 1000,
+        PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
+        PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
+        PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        XD_TOKEN: '__ga_xd_token',
+        UID_FROM: '__ga_xd_from11', // 区别于1.0，避免干扰到1.0
+        UID_TO: '__ga_xd_to11',
+        M: {
+            G: MINER + '&t=g',
+            P: MINER + '&t=p'
+        },
+        ARR: {// 黄金令箭埋点
+            ST_SET: arr + '/tmallbrand.999.5',
+            ST_GET: arr + '/tmallbrand.999.6',
+            ST_RM: arr + '/tmallbrand.999.7',
+            ST_CL: arr + '/tmallbrand.999.8'
+        },
+        K: {// Key
+            // param
+            ONLOAD: 'onload',
+            PROXY: 'proxy',
+            PREFIX: 'prefix',
+            XD_TIMEOUT: 'xdTimeout',
+            IFRAME_TIMEOUT: 'iframeTimeout',
+            // other
+            IFRAME: 'iframe',
+            TOKEN: 'token',
+            XD: 'xd',
+            CALLBACK_LIST: 'callbackList',
+            CACHED_ACTION_LIST: 'cachedActionList',
+            PROXY_READY: 'proxyReady'
+        }
+    };
+
+    return Conf;
+});
+
+
+/**
+ * Util library
+ * 工具库
+ *
+ * @author luics (鬼道)
+ * @date 2013-07-25
+ */
+
+KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
+
+    var Seed = {
+        /**
+         * 封装 window.console.log 开关控制 log 是否打印
+         */
+        log: function() {
+            if (!Conf.DEBUG_LOG) {
+                return;
+            }
+
+            // var con = window.console; 赋值有风险？
+            // 遇到过 var $ = document.querySelectorAll, 之后$为undefined $()
+            // CASE IE 9, 遇到了 apply  undefined 问题
+            if (window.console && window.console.log && window.console.log.apply) {
+                window.console.log.apply(window.console, arguments);
+            }
+        },
+        /**
+         * 字符串格式化
+         *
+         * Usage：
+         *   fm('{0}-{1}', 1, '2') // 结果：1-2
+         *   fm('{0}-{1}-{0}', 1, '2') // 结果：1-2-1
+         *
+         * @returns {string}
+         */
+        fm: function() {
+            if (arguments.length == 0) {
+                return '';
+            }
+            else if (arguments.length == 1) {
+                return arguments[0];
+            }
+
+            var res = arguments[0], i;
+            for (i = 1; i < arguments.length; ++i) {
+                var re = new RegExp('\\{' + (i - 1) + '\\}', 'g');
+                res = res.replace(re, arguments[i]);
+            }
+            // TODO 性能优化版本
+            return res;
+        }
+    };
+
+    var U = Seed;
+
+    /**
+     * 黄金令箭埋点
+     */
+    U.sendLog = function(url) {
+        U.send(U.fm(Conf.M.G, encodeURIComponent(location.href)));
+        U.send(url);
+    };
+
+    /**
+     * 黄金令箭埋点
+     * @param {string} url
+     */
+    U.send = function(url) {
+        if (!url) {
+            return;
+        }
+        var id = "__st_" + (+new Date) + Math.random();
+        var img = new Image();
+        window[id] = img;
+        img.src = U.fm('{0}{1}r{2}=1', url, (url.indexOf('?') > -1 ? '&' : '?'), +new Date);
+        img.onload = function() {
+            window[id] = null;
+        }
+    };
+
+    var RND = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    /**
+     * 获取随机字符串
+     * @param {number} length 串长度
+     */
+    U.getRndStr = function(length) {
+        var rnd = [];
+        var len = RND.length, r;
+        for (var i = 0; i < length; ++i) {
+            r = RND.charAt(Math.floor(Math.random() * len));
+            rnd.push(r);
+        }
+        return rnd.join('');
+    };
+
+    // end  
+    return U;
+}, {requires: [
+    './conf'
+]});
+
 /**
  * iframe 跨域通信
  * 基于 postMessage + window.name (IE 6、7)
@@ -23,15 +192,14 @@ gallery/storage/1.1/xd
  *     0. 消息校验机制
  *   0. 封装 XD 类，
  *   0. TODO 支持单页多实例，目前看比较困难，需要实现握手，暂无时间实现
- *   
- *   TODO 如何移除 
+ *
+ *   TODO 如何移除
  */
-KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
+KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
     var guid = 0;
-    var UID_FROM = '__ga_xd_from';
-    var UID_TO = '__ga_xd_to';
 
     var RECEIVE = 'receive';
+    var TOKEN = 'token';
     var TARGET = 'target';
     var TIMEOUT = 'timeout';
     var IFRAME_TIMEOUT = 'iframeTimeout';
@@ -91,20 +259,16 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
             };
             q.push(item);
 
-            //alert('XD.IE.postMessage' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + uid + '||tm=' + IE.tm);
+            //U.log('XD.IE.postMessage' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + uid + '||tm=' + IE.tm);
 
             if (!IE.tm) {
                 IE.tm = setInterval(function() {
                     var q = IE.q;
-                    //alert('XD.IE.postMessage inv1' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + (q.length > 0 ? q[0].uid : -1) + '||tm=' + IE.tm);
-
                     if (q.length === 0 || q[0].uid <= IE.hid) {
                         return;
                     }
 
                     var item = q[0];
-                    //alert('XD.IE.postMessage inv2' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + uid + '||tm=' + IE.tm);
-
                     IE.hid = item.uid;
                     item.target.name = item.name;
                 }, INV_SEND);
@@ -127,17 +291,16 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
                     // 出队列，
 
                     IE.q.shift();
-                    //alert('onNameChanged||' + document.domain + '||' + name);
 
                     lastName = name;
                     var ms = reName.exec(name);
                     if (!ms) {
                         return;
                     }
-                    //alert(ms.length + '|' + name);
 
                     /**
                      * 模拟 postMessage event 参数
+                     * @type {Object}
                      */
                     var ev = {
                         origin: ms[2],
@@ -169,14 +332,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
 
         // TODO 安全考虑 if(ev.origin == 'http://www.tmall.com'){}
 
-        // 消息格式校验 + 多 xd 实例共存
+        // 消息格式校验
 
-        if (!(UID_FROM in data) || !(UID_TO in data)) {
+        if (!(Conf.UID_FROM in data) || !(Conf.UID_TO in data)) {
             return;
         }
-        //alert('messageHandler||' + document.domain + '||' + ev.data + '||');
 
-        var uid = data[UID_TO];
+        var uid = data[Conf.UID_TO];
         if (uid) {
             var timer = timeoutList[uid];
             // timer 被消费掉，说明已经超时了
@@ -188,8 +350,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
             }
         }
 
+        var token = data[Conf.XD_TOKEN];
         S.each(xdList, function(xd) {
-            xd.get(RECEIVE)(data);
+            //支持多实例共存
+            
+            if (token === xd.get(TOKEN)) {
+                xd.get(RECEIVE)(data);
+            }
         });
     }
 
@@ -203,23 +370,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
      * @param {Function} opt.receive 接收跨域消息
      * @param {boolean} [opt.timeout] iframe 加载超时，之后回调将直接做 faked 响应
      */
-    var xdInstance = 0;
-
     function XD(opt) {
         var me = this;
-        if (++xdInstance > 1) {
-            throw 'XD is singleton';
-        }
-
         me._opt = opt;
-        me.init();
+        xdList.push(me);
     }
 
     S.augment(XD, {
-        init: function() {
-            var me = this;
-            xdList.push(me);
-        },
         /**
          * 发送跨域消息
          * @param {Object} action
@@ -238,19 +395,20 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
             origin = origin || '*';
 
             // 首次消息可能为空
-            
-            action[UID_TO] = action[UID_FROM] || 0;
-            action[UID_FROM] = uid;
+
+            action[Conf.XD_TOKEN] = me.get(TOKEN);
+            action[Conf.UID_TO] = action[Conf.UID_FROM] || 0;
+            action[Conf.UID_FROM] = uid;
             var jsonStr = JSON.stringify(action);
-            //alert('send||' + document.domain + '||' + jsonStr + '||');
 
             function fakedResponse() {
                 var ev = {};
                 ev.origin = '*';
                 var data = {};
                 data.c = action.c || '';
-                data[UID_FROM] = 0;
-                data[UID_TO] = 0;
+                data[Conf.XD_TOKEN] = action[Conf.XD_TOKEN] || '';
+                data[Conf.UID_FROM] = 0;
+                data[Conf.UID_TO] = 0;
                 ev.data = JSON.stringify(data);
                 //alert('fakedResponse, send||' + document.domain + '||' + JSON.stringify(ev) + '||');
 
@@ -290,6 +448,8 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
     return XD;
 }, {requires: [
     'event',
-    'json'
+    'json',
+    './conf',
+    './util'
 ]});
 	

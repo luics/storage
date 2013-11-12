@@ -37,6 +37,9 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        XD_TOKEN: '__ga_xd_token',
+        UID_FROM: '__ga_xd_from11', // 区别于1.0，避免干扰到1.0
+        UID_TO: '__ga_xd_to11',
         M: {
             G: MINER + '&t=g',
             P: MINER + '&t=p'
@@ -56,6 +59,7 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
             IFRAME_TIMEOUT: 'iframeTimeout',
             // other
             IFRAME: 'iframe',
+            TOKEN: 'token',
             XD: 'xd',
             CALLBACK_LIST: 'callbackList',
             CACHED_ACTION_LIST: 'cachedActionList',
@@ -132,6 +136,7 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
 
     /**
      * 黄金令箭埋点
+     * @param {string} url
      */
     U.send = function(url) {
         if (!url) {
@@ -144,6 +149,21 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
         img.onload = function() {
             window[id] = null;
         }
+    };
+
+    var RND = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    /**
+     * 获取随机字符串
+     * @param {number} length 串长度
+     */
+    U.getRndStr = function(length) {
+        var rnd = [];
+        var len = RND.length, r;
+        for (var i = 0; i < length; ++i) {
+            r = RND.charAt(Math.floor(Math.random() * len));
+            rnd.push(r);
+        }
+        return rnd.join('');
     };
 
     // end  

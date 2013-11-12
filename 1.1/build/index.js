@@ -39,6 +39,9 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        XD_TOKEN: '__ga_xd_token',
+        UID_FROM: '__ga_xd_from11', // 区别于1.0，避免干扰到1.0
+        UID_TO: '__ga_xd_to11',
         M: {
             G: MINER + '&t=g',
             P: MINER + '&t=p'
@@ -58,6 +61,7 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
             IFRAME_TIMEOUT: 'iframeTimeout',
             // other
             IFRAME: 'iframe',
+            TOKEN: 'token',
             XD: 'xd',
             CALLBACK_LIST: 'callbackList',
             CACHED_ACTION_LIST: 'cachedActionList',
@@ -134,6 +138,7 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
 
     /**
      * 黄金令箭埋点
+     * @param {string} url
      */
     U.send = function(url) {
         if (!url) {
@@ -146,6 +151,21 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
         img.onload = function() {
             window[id] = null;
         }
+    };
+
+    var RND = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    /**
+     * 获取随机字符串
+     * @param {number} length 串长度
+     */
+    U.getRndStr = function(length) {
+        var rnd = [];
+        var len = RND.length, r;
+        for (var i = 0; i < length; ++i) {
+            r = RND.charAt(Math.floor(Math.random() * len));
+            rnd.push(r);
+        }
+        return rnd.join('');
     };
 
     // end  
@@ -173,15 +193,14 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
  *     0. 消息校验机制
  *   0. 封装 XD 类，
  *   0. TODO 支持单页多实例，目前看比较困难，需要实现握手，暂无时间实现
- *   
- *   TODO 如何移除 
+ *
+ *   TODO 如何移除
  */
-KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
+KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
     var guid = 0;
-    var UID_FROM = '__ga_xd_from';
-    var UID_TO = '__ga_xd_to';
 
     var RECEIVE = 'receive';
+    var TOKEN = 'token';
     var TARGET = 'target';
     var TIMEOUT = 'timeout';
     var IFRAME_TIMEOUT = 'iframeTimeout';
@@ -241,20 +260,16 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
             };
             q.push(item);
 
-            //alert('XD.IE.postMessage' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + uid + '||tm=' + IE.tm);
+            //U.log('XD.IE.postMessage' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + uid + '||tm=' + IE.tm);
 
             if (!IE.tm) {
                 IE.tm = setInterval(function() {
                     var q = IE.q;
-                    //alert('XD.IE.postMessage inv1' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + (q.length > 0 ? q[0].uid : -1) + '||tm=' + IE.tm);
-
                     if (q.length === 0 || q[0].uid <= IE.hid) {
                         return;
                     }
 
                     var item = q[0];
-                    //alert('XD.IE.postMessage inv2' + '||' + document.domain + '||q.length=' + q.length + '||hid=' + IE.hid + '||uid=' + uid + '||tm=' + IE.tm);
-
                     IE.hid = item.uid;
                     item.target.name = item.name;
                 }, INV_SEND);
@@ -277,17 +292,16 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
                     // 出队列，
 
                     IE.q.shift();
-                    //alert('onNameChanged||' + document.domain + '||' + name);
 
                     lastName = name;
                     var ms = reName.exec(name);
                     if (!ms) {
                         return;
                     }
-                    //alert(ms.length + '|' + name);
 
                     /**
                      * 模拟 postMessage event 参数
+                     * @type {Object}
                      */
                     var ev = {
                         origin: ms[2],
@@ -319,14 +333,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
 
         // TODO 安全考虑 if(ev.origin == 'http://www.tmall.com'){}
 
-        // 消息格式校验 + 多 xd 实例共存
+        // 消息格式校验
 
-        if (!(UID_FROM in data) || !(UID_TO in data)) {
+        if (!(Conf.UID_FROM in data) || !(Conf.UID_TO in data)) {
             return;
         }
-        //alert('messageHandler||' + document.domain + '||' + ev.data + '||');
 
-        var uid = data[UID_TO];
+        var uid = data[Conf.UID_TO];
         if (uid) {
             var timer = timeoutList[uid];
             // timer 被消费掉，说明已经超时了
@@ -338,8 +351,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
             }
         }
 
+        var token = data[Conf.XD_TOKEN];
         S.each(xdList, function(xd) {
-            xd.get(RECEIVE)(data);
+            //支持多实例共存
+            
+            if (token === xd.get(TOKEN)) {
+                xd.get(RECEIVE)(data);
+            }
         });
     }
 
@@ -353,23 +371,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
      * @param {Function} opt.receive 接收跨域消息
      * @param {boolean} [opt.timeout] iframe 加载超时，之后回调将直接做 faked 响应
      */
-    var xdInstance = 0;
-
     function XD(opt) {
         var me = this;
-        if (++xdInstance > 1) {
-            throw 'XD is singleton';
-        }
-
         me._opt = opt;
-        me.init();
+        xdList.push(me);
     }
 
     S.augment(XD, {
-        init: function() {
-            var me = this;
-            xdList.push(me);
-        },
         /**
          * 发送跨域消息
          * @param {Object} action
@@ -388,19 +396,20 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
             origin = origin || '*';
 
             // 首次消息可能为空
-            
-            action[UID_TO] = action[UID_FROM] || 0;
-            action[UID_FROM] = uid;
+
+            action[Conf.XD_TOKEN] = me.get(TOKEN);
+            action[Conf.UID_TO] = action[Conf.UID_FROM] || 0;
+            action[Conf.UID_FROM] = uid;
             var jsonStr = JSON.stringify(action);
-            //alert('send||' + document.domain + '||' + jsonStr + '||');
 
             function fakedResponse() {
                 var ev = {};
                 ev.origin = '*';
                 var data = {};
                 data.c = action.c || '';
-                data[UID_FROM] = 0;
-                data[UID_TO] = 0;
+                data[Conf.XD_TOKEN] = action[Conf.XD_TOKEN] || '';
+                data[Conf.UID_FROM] = 0;
+                data[Conf.UID_TO] = 0;
                 ev.data = JSON.stringify(data);
                 //alert('fakedResponse, send||' + document.domain + '||' + JSON.stringify(ev) + '||');
 
@@ -440,7 +449,9 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
     return XD;
 }, {requires: [
     'event',
-    'json'
+    'json',
+    './conf',
+    './util'
 ]});
 	
 /**
@@ -456,16 +467,12 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON) {
  * @see js onload http://www.planabc.net/2008/10/31/javascript_ready_onload/
  */
 KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
-    if (window.__KS_STORAGE) {
-        return window.__KS_STORAGE;
+    if (window.__KS_STORAGE11) {
+        return window.__KS_STORAGE11;
     }
 
-    var defOpt = {
-
-    };
+    var defOpt = {};
     var guid = 0;
-    var instanceCount = 0;
-    var instance;
 
     /**
      * Storage Class
@@ -478,15 +485,11 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
-        if (++instanceCount > 1) {
-            //throw 'storage is a singleton';
-            return instance;
-        }iframe
-
         var me = this;
-        instance = me;
         opt = opt || {};
+        opt.token = +new Date + U.getRndStr(8);
         var proxy = opt.proxy || Conf.PROXY;
+        proxy = U.fm('{0}{1}{2}={3}', proxy, proxy.indexOf('?') > -1 ? '&' : '?', Conf.XD_TOKEN, opt.token);
         switch (proxy) {
             case 'tmall':
                 proxy = Conf.PROXY_TMALL;
@@ -524,6 +527,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
 
                 var xd = new XD({
                     target: iframe.contentWindow,
+                    token: me.getConf(Conf.K.TOKEN),
                     iframeTimeout: iframeTimeout,
                     timeout: me.getConf(Conf.K.XD_TIMEOUT),
                     receive: function(data) {
@@ -679,7 +683,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
      proxy: Conf.STORAGE_PROXY
      });*/
 
-    window.__KS_STORAGE = Storage;
+    window.__KS_STORAGE11 = Storage;
 
     return Storage;
 }, {

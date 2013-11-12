@@ -45,6 +45,7 @@ KISSY.add('gallery/storage/1.0/conf', function(S) {
             IFRAME: 'iframe',
             ONLOAD: 'onload',
             XD: 'xd',
+            TOKEN: 'token',
             XD_TIMEOUT: 'xdTimeout',
             IFRAME_TIMEOUT: 'iframeTimeout',
             PROXY: 'proxy',

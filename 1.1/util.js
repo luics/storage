@@ -63,6 +63,7 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
 
     /**
      * 黄金令箭埋点
+     * @param {string} url
      */
     U.send = function(url) {
         if (!url) {
@@ -75,6 +76,21 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
         img.onload = function() {
             window[id] = null;
         }
+    };
+
+    var RND = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    /**
+     * 获取随机字符串
+     * @param {number} length 串长度
+     */
+    U.getRndStr = function(length) {
+        var rnd = [];
+        var len = RND.length, r;
+        for (var i = 0; i < length; ++i) {
+            r = RND.charAt(Math.floor(Math.random() * len));
+            rnd.push(r);
+        }
+        return rnd.join('');
     };
 
     // end  

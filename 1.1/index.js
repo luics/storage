@@ -11,16 +11,12 @@
  * @see js onload http://www.planabc.net/2008/10/31/javascript_ready_onload/
  */
 KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
-    if (window.__KS_STORAGE) {
-        return window.__KS_STORAGE;
+    if (window.__KS_STORAGE11) {
+        return window.__KS_STORAGE11;
     }
 
-    var defOpt = {
-
-    };
+    var defOpt = {};
     var guid = 0;
-    var instanceCount = 0;
-    var instance;
 
     /**
      * Storage Class
@@ -33,15 +29,11 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
-        if (++instanceCount > 1) {
-            //throw 'storage is a singleton';
-            return instance;
-        }iframe
-
         var me = this;
-        instance = me;
         opt = opt || {};
+        opt.token = +new Date + U.getRndStr(8);
         var proxy = opt.proxy || Conf.PROXY;
+        proxy = U.fm('{0}{1}{2}={3}', proxy, proxy.indexOf('?') > -1 ? '&' : '?', Conf.XD_TOKEN, opt.token);
         switch (proxy) {
             case 'tmall':
                 proxy = Conf.PROXY_TMALL;
@@ -79,6 +71,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
 
                 var xd = new XD({
                     target: iframe.contentWindow,
+                    token: me.getConf(Conf.K.TOKEN),
                     iframeTimeout: iframeTimeout,
                     timeout: me.getConf(Conf.K.XD_TIMEOUT),
                     receive: function(data) {
@@ -234,7 +227,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
      proxy: Conf.STORAGE_PROXY
      });*/
 
-    window.__KS_STORAGE = Storage;
+    window.__KS_STORAGE11 = Storage;
 
     return Storage;
 }, {

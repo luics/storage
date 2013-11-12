@@ -30,6 +30,9 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        XD_TOKEN: '__ga_xd_token',
+        UID_FROM: '__ga_xd_from11', // 区别于1.0，避免干扰到1.0
+        UID_TO: '__ga_xd_to11',
         M: {
             G: MINER + '&t=g',
             P: MINER + '&t=p'
@@ -49,6 +52,7 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
             IFRAME_TIMEOUT: 'iframeTimeout',
             // other
             IFRAME: 'iframe',
+            TOKEN: 'token',
             XD: 'xd',
             CALLBACK_LIST: 'callbackList',
             CACHED_ACTION_LIST: 'cachedActionList',

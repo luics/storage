@@ -8,29 +8,26 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
     module('gallery/storage/1.1/index');
 
     // 强制发送 log
-    Conf.SAM_PV = 1;
+    //Conf.SAM_PV = 1;
+    var proxy = document.domain.indexOf('luics.com') > -1
+        ? 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html'
+        : '';
+    var prefix = 'test/basic';
 
-    var storage = new Storage({
-        //proxy: 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html',
-        prefix: 'test/basic'
+    var myStorage = new Storage({
+        proxy: proxy,
+        prefix: prefix
     });
-
-
-    storage = new Storage();
-    console.log(storage);
-//    var storage = new Storage({proxy:'tmall'});
-//    var storage = new Storage({proxy:'taobao'});
-//    var storage = new Storage({proxy:'common'});
-//    var storage = new Storage({proxy: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html' });
 
     var K11 = 'K11';
     var V11 = 'V11';
 
     test('load', function() {
-        ok(typeof storage !== 'undefined');
+        ok(typeof myStorage !== 'undefined');
     });
 
-    function testCase(k, v, exp) {
+    function testCase(k, v, exp, storage) {
+        storage = storage || myStorage;
         exp = typeof exp === 'undefined' ? v : exp;
         var eq = (typeof exp === 'object' ? deepEqual : equal);
 
@@ -44,11 +41,11 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
         }});
     }
 
-    test("set/get 基本功能", function() {
+    test("set/get basic", function() {
         testCase(K11, V11);
     });
 
-    test("set/get 数据类型", function() {
+    test("set/get data type", function() {
         var i = 0;
         testCase('kt' + i++, 1);
         testCase('kt' + i++, 0);
@@ -71,15 +68,25 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
         testCase('kt' + i++, undefined, '');
     });
 
+    test("multi instances", function() {
+        for (var i = 0; i < 5; ++i) {
+            var storage = new Storage({
+                proxy: proxy,
+                prefix: prefix
+            });
+            testCase('mik' + i, 'miv' + i, 'miv' + i, storage);
+        }
+    });
+
     test("remove/clear", function() {
         stop();
-        storage.remove({k: K11, success: function(data) {
+        myStorage.remove({k: K11, success: function(data) {
             equal(data, undefined);
-            storage.get({k: K11, success: function(data) {
+            myStorage.get({k: K11, success: function(data) {
                 equal(data, undefined);
 
-                storage.clear({success: function() {
-                    storage.get({k: K11, success: function(data) {
+                myStorage.clear({success: function() {
+                    myStorage.get({k: K11, success: function(data) {
                         equal(data, undefined);
                         start();
                     }});
@@ -88,6 +95,7 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
             }});
         }});
     });
+
 
     test("set/get 传输上限", function() {
         //TODO 
