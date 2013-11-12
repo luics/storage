@@ -464,7 +464,8 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
 
     };
     var guid = 0;
-    var instance = 0;
+    var instanceCount = 0;
+    var instance;
 
     /**
      * Storage Class
@@ -477,12 +478,13 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
-        if (++instance > 1) {
+        if (++instanceCount > 1) {
             //throw 'storage is a singleton';
-            return;
-        }
+            return instance;
+        }iframe
 
         var me = this;
+        instance = me;
         opt = opt || {};
         var proxy = opt.proxy || Conf.PROXY;
         switch (proxy) {

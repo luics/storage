@@ -17,6 +17,8 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.0/conf', function(S,
 //    var storage = new Storage({proxy:'taobao'});
 //    var storage = new Storage({proxy:'common'});
 //    var storage = new Storage({proxy: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html' });
+    // 验证
+    storage = new Storage();
 
     var K11 = 'K11';
     var V11 = 'V11';

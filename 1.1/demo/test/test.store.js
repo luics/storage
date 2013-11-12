@@ -14,6 +14,10 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
         //proxy: 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html',
         prefix: 'test/basic'
     });
+
+
+    storage = new Storage();
+    console.log(storage);
 //    var storage = new Storage({proxy:'tmall'});
 //    var storage = new Storage({proxy:'taobao'});
 //    var storage = new Storage({proxy:'common'});
