@@ -15,8 +15,7 @@ gallery/storage/1.1/proxy
  * @date 2013-07-25
  */
 //CASE js编码应该utf8
-KISSY.add('gallery/storage/1.1/conf', function(S) {
-
+KISSY.add('gallery/storage/1.1/conf', function() {
     /**
      * CASE 不能使用 ks-debug，巨大的坑，多谢 @游侠 提醒
      */
@@ -40,7 +39,9 @@ KISSY.add('gallery/storage/1.1/conf', function(S) {
         PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        // 用于标识 xd 实例
         XD_TOKEN: '__ga_xd_token',
+        // UIDs 保存本次通信双方的 id
         UID_FROM: '__ga_xd_from11', // 区别于1.0，避免干扰到1.0
         UID_TO: '__ga_xd_to11',
         M: {
@@ -322,41 +323,35 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
      */
     function messageHandler(ev) {
         var data = {};
-
         try {
             data = JSON.parse(ev.data);
         }
         catch (e) {
-            // 不满足格式的数据不考虑继续
-
             return;
         }
 
         // TODO 安全考虑 if(ev.origin == 'http://www.tmall.com'){}
 
-        // 消息格式校验
-
-        if (!(Conf.UID_FROM in data) || !(Conf.UID_TO in data)) {
-            return;
-        }
-
-        var uid = data[Conf.UID_TO];
-        if (uid) {
-            var timer = timeoutList[uid];
-            // timer 被消费掉，说明已经超时了
-
-            clearTimeout(timer);
-            timeoutList[uid] = 0;
-            if (!timer) {
-                return;
-            }
-        }
-
         var token = data[Conf.XD_TOKEN];
         S.each(xdList, function(xd) {
-            //支持多实例共存
-            
-            if (token === xd.get(TOKEN)) {
+            //支持多实例共存，消息格式校验
+
+            if (token === xd.get(TOKEN)
+                && (Conf.UID_FROM in data)
+                && (Conf.UID_TO in data)
+                ) {
+                var uid = data[Conf.UID_TO];
+                if (uid) {
+                    var timer = timeoutList[uid];
+                    // timer 被消费掉，说明已经超时了，此时不需要再回调
+
+                    clearTimeout(timer);
+                    timeoutList[uid] = 0;
+                    if (!timer) {
+                        return;
+                    }
+                }
+
                 xd.get(RECEIVE)(data);
             }
         });
@@ -412,8 +407,6 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
                 data[Conf.UID_FROM] = 0;
                 data[Conf.UID_TO] = 0;
                 ev.data = JSON.stringify(data);
-                //alert('fakedResponse, send||' + document.domain + '||' + JSON.stringify(ev) + '||');
-
                 messageHandler(ev);
             }
 

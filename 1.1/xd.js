@@ -165,7 +165,7 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
                 var uid = data[Conf.UID_TO];
                 if (uid) {
                     var timer = timeoutList[uid];
-                    // timer 被消费掉，说明已经超时了
+                    // timer 被消费掉，说明已经超时了，此时不需要再回调
 
                     clearTimeout(timer);
                     timeoutList[uid] = 0;
@@ -229,8 +229,6 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
                 data[Conf.UID_FROM] = 0;
                 data[Conf.UID_TO] = 0;
                 ev.data = JSON.stringify(data);
-                //alert('fakedResponse, send||' + document.domain + '||' + JSON.stringify(ev) + '||');
-
                 messageHandler(ev);
             }
 

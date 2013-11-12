@@ -4,7 +4,7 @@
  * @author luics (鬼道)
  */
 
-KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S, UA, Storage, Conf) {
+KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S, UA, Storage10, Storage, Conf) {
     module('gallery/storage/1.1/index');
 
     // 强制发送 log
@@ -15,7 +15,7 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
         : '';
     var prefix = 'test/basic';
 
-    var myStorage = new Storage({
+    var storage11 = new Storage({
         proxy: proxy,
         prefix: prefix
     });
@@ -24,11 +24,11 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
     var V11 = 'V11';
 
     test('load', function() {
-        ok(typeof myStorage !== 'undefined');
+        ok(typeof storage11 !== 'undefined');
     });
 
     function testCase(k, v, exp, storage) {
-        storage = storage || myStorage;
+        storage = storage || storage11;
         exp = typeof exp === 'undefined' ? v : exp;
         var eq = (typeof exp === 'object' ? deepEqual : equal);
 
@@ -82,23 +82,55 @@ KISSY.use('ua, gallery/storage/1.1/index, gallery/storage/1.1/conf', function(S,
     if (!DEBUG) {
         test("proxy exception", function() {
             var storage = new Storage({
-                proxy: '/wrong.proxy.url',
+                proxy: '/wrong-proxy-url-for-test',
                 prefix: prefix
             });
 
-            testCase('wrong.proxy.url', undefined, undefined, storage);
+            testCase('wrong-proxy', undefined, undefined, storage);
         });
     }
 
+    test("multi versions", function() {
+        var i = 0;
+        var N = 4;
+
+        var K10 = 'K10';
+        var V10 = 'V10';
+        var K11 = 'K11';
+        var V11 = 'V11';
+
+        stop();
+        var storage10 = new Storage10();
+        storage10.set({k: K10, v: V10, success: function(data) {
+            ++i;
+            equal(data, V10);
+            storage10.get({k: K10, success: function(data) {
+                ++i;
+                equal(data, V10);
+                i === N && start();
+            }});
+        }});
+
+        storage11.set({k: K11, v: V11, success: function(data) {
+            ++i;
+            equal(data, V11);
+            storage11.get({k: K11, success: function(data) {
+                ++i;
+                equal(data, V11);
+                i === N && start();
+            }});
+        }});
+    });
+
     test("remove/clear", function() {
         stop();
-        myStorage.remove({k: K11, success: function(data) {
+        storage11.remove({k: K11, success: function(data) {
             equal(data, undefined);
-            myStorage.get({k: K11, success: function(data) {
+            storage11.get({k: K11, success: function(data) {
                 equal(data, undefined);
 
-                myStorage.clear({success: function() {
-                    myStorage.get({k: K11, success: function(data) {
+                storage11.clear({success: function() {
+                    storage11.get({k: K11, success: function(data) {
                         equal(data, undefined);
                         start();
                     }});
