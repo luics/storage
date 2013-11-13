@@ -79,7 +79,7 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
         }
     });
 
-    if (!DEBUG) {
+    if (location.href.indexOf('__testExp=1') > -1) {
         test("proxy exception", function() {
             var storage = new Storage({
                 proxy: '/wrong-proxy-url-for-test',
