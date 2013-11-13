@@ -36,8 +36,7 @@ KISSY.config({
 
 ```javascript
 S.use('gallery/storage/1.1/index', function (S, Storage) {
-    
-    // 单例，无需多次实例化
+
     var storage = new Storage();
     
     storage.set({k: 'key', v: 'value', success: function() {
@@ -52,13 +51,11 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 0. `v` value
 0. `success` 回调，如遇超时等异常，参数`data`为`undefined`，详见[此处讨论](https://github.com/luics/storage/wiki/Storage#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
 
-
 ### remove/clear
 
 ```javascript
 S.use('gallery/storage/1.1/index', function (S, Storage) {  
 
-    // 单例，无需多次实例化
     var storage = new Storage();
     
     // 删除数据'key' 
@@ -76,14 +73,11 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 ```javascript
 S.use('gallery/storage/1.1/index', function (S, Storage) {
     
-    // 单例，无需多次实例化
     var storage = new Storage({
         'proxy': 'tmall' 
     });
 });
 ```
-
-注： Storage 是单例模式，无需多次实例化
 
 所有参数均为可选：
 
