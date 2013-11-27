@@ -90,7 +90,7 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
         });
     }
 
-    test("multi versions", function() {
+    /*test("multi versions", function() {
         var i = 0;
         var N = 4;
 
@@ -120,7 +120,7 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
                 i === N && start();
             }});
         }});
-    });
+    });*/
 
     test("remove/clear", function() {
         stop();
