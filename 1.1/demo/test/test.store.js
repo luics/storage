@@ -11,7 +11,7 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
     //Conf.SAM_PV = 1;
     var DEBUG = document.domain.indexOf('luics.com') > -1;
     var proxy = DEBUG
-        ? 'http://luics.com/proj/storage/1.1/demo/test/assets/proxy-local.html'
+        ? 'http://luics.net/proj/storage/1.1/demo/test/assets/proxy-local.html?if-debug-log=1'
         : '';
     var prefix = 'test/basic';
 
@@ -46,6 +46,16 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
         testCase(K11, V11);
     });
 
+    test("multi instances", function() {
+        for (var i = 0; i < 2; ++i) {
+            var storage = new Storage({
+                proxy: proxy,
+                prefix: prefix
+            });
+            testCase('mik' + i, 'miv' + i, 'miv' + i, storage);
+        }
+    });
+
     test("set/get data type", function() {
         var i = 0;
         testCase('kt' + i++, 1);
@@ -67,16 +77,6 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
 
         testCase('kt' + i++, null, '');
         testCase('kt' + i++, undefined, '');
-    });
-
-    test("multi instances", function() {
-        for (var i = 0; i < 5; ++i) {
-            var storage = new Storage({
-                proxy: proxy,
-                prefix: prefix
-            });
-            testCase('mik' + i, 'miv' + i, 'miv' + i, storage);
-        }
     });
 
     if (location.href.indexOf('__testExp=1') > -1) {

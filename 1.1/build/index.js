@@ -193,9 +193,9 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
  *     0. 传递 JSON 数据
  *     0. 消息校验机制
  *   0. 封装 XD 类，
- *   0. TODO 支持单页多实例，目前看比较困难，需要实现握手，暂无时间实现
+ *   0. 支持多实例, 通过双方一致 token 实现
+ *      * 是否考虑握手交换 token？暂时无需求
  *
- *   TODO 如何移除
  */
 KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
     var guid = 0;
@@ -216,7 +216,15 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
 
     function init() {
         if (postMessage) {
-            Event.on(win, 'message', messageHandler);
+            if (win.addEventListener) {
+                addEventListener('message', messageHandler, false);
+            }
+            else if (win.attachEvent) {//ie8
+                attachEvent('onmessage', messageHandler);
+            }
+
+            // BUG https://github.com/kissyteam/kissy/issues/515
+            // Event.on(win, 'message', messageHandler);
         }
         else {
             IE.onMessage(messageHandler);
@@ -321,6 +329,8 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
      * @param {Object} ev 监听到的数据对象
      */
     function messageHandler(ev) {
+        //U.log(document.domain, 'messageHandler', ev.data, ev);
+
         var data = {};
         try {
             data = JSON.parse(ev.data);
@@ -377,8 +387,9 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
          * 发送跨域消息
          * @param {Object} action
          * @param {String} [origin]
+         * @param {boolean} [noResponse] 避免无需响应时产生多余的 timeout
          */
-        send: function(action, origin) {
+        send: function(action, origin, noResponse) {
             if (!S.isObject(action)) {
                 return;
             }
@@ -409,10 +420,13 @@ KISSY.add('gallery/storage/1.1/xd', function(S, Event, JSON, Conf, U) {
                 messageHandler(ev);
             }
 
-            timeoutList[uid] = setTimeout(function() {
-                timeoutList[uid] = 0;
-                fakedResponse();
-            }, timeout);
+            if (!noResponse) {
+                timeoutList[uid] = setTimeout(function() {
+                    //U.log(document.domain, 'timeout', uid);
+                    timeoutList[uid] = 0;
+                    fakedResponse();
+                }, timeout);
+            }
 
             if (me.get(IFRAME_TIMEOUT)) {
                 // 支持iframe 级别的超时
@@ -572,6 +586,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
             }
 
             // @see iframe onload http://www.planabc.net/2009/09/22/iframe_onload/
+            // TODO src 赋值为什么不在绑定事件之后？
 
             iframe.src = me.getConf(Conf.K.PROXY);
             if (iframe.attachEvent) {

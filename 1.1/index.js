@@ -123,6 +123,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
             }
 
             // @see iframe onload http://www.planabc.net/2009/09/22/iframe_onload/
+            // TODO src 赋值为什么不在绑定事件之后？
 
             iframe.src = me.getConf(Conf.K.PROXY);
             if (iframe.attachEvent) {

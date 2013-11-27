@@ -11,6 +11,7 @@ KISSY.add('gallery/storage/1.1/proxy', function(S, Event, JSON, XD, Storejs, Con
             target: parent,
             token: url.indexOf('?') > -1 ? S.unparam(url.substring(url.indexOf('?') + 1))[Conf.XD_TOKEN] : '',
             receive: function(data) {
+                //U.log(document.domain, 'receive', data);
                 var key = (data.p ? data.p + '/' : '/') + (data.k || '');
                 var value = data.v || '';
                 var method = data.m ? Storejs[data.m] : 0;
@@ -21,7 +22,7 @@ KISSY.add('gallery/storage/1.1/proxy', function(S, Event, JSON, XD, Storejs, Con
                     action.c = data.c || '';
                     action.v = method(key, value);
 
-                    xd.send(action);
+                    xd.send(action, '*', true);
                 }
             }
         });
