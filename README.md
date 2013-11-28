@@ -13,6 +13,7 @@
 
 ### 1.1
 
+* 修复 [kissy 1.4.0 postMessage bug](https://github.com/kissyteam/kissy/issues/515) 导致 的问题
 * 修复因为单例模式导致的多次实例化后，接口调用失败的 bug
 * 《使用 Storage 的3个理由》组件入门介绍及推广： [伯乐在线版本](http://blog.jobbole.com/49881/)、[ATA 版本](http://www.atatech.org/article/detail/11350/348)
 * 新增 [prefix](http://gallery.kissyui.com/storage/1.1/guide/index.html#API) 参数，指定 key 前缀，移除1.0的默认前缀
