@@ -30,9 +30,8 @@ KISSY.add('gallery/storage/1.1/conf', function() {
         DEBUG_LOG: DEBUG_LOG,
         // 其他配置
         SAM_PV: 1 / 1000,
-        //SAM_PV: 1,
         TIMEOUT_STORAGE: 3 * 1000,
-        PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
+        PROXY: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
         // 用于标识 xd 实例

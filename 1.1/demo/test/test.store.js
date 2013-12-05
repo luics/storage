@@ -46,10 +46,11 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
         testCase(K11, V11);
     });
 
+    var proxies = ['', 'common', 'tmall', 'taobao'];
     test("multi instances", function() {
-        for (var i = 0; i < 2; ++i) {
+        for (var i = 0; i < proxies.length; ++i) {
             var storage = new Storage({
-                proxy: proxy,
+                proxy: proxies[i % proxies.length],
                 prefix: prefix
             });
             testCase('mik' + i, 'miv' + i, 'miv' + i, storage);
@@ -91,36 +92,36 @@ KISSY.use('ua, gallery/storage/1.0/index, gallery/storage/1.1/index, gallery/sto
     }
 
     /*test("multi versions", function() {
-        var i = 0;
-        var N = 4;
+     var i = 0;
+     var N = 4;
 
-        var K10 = 'K10';
-        var V10 = 'V10';
-        var K11 = 'K11';
-        var V11 = 'V11';
+     var K10 = 'K10';
+     var V10 = 'V10';
+     var K11 = 'K11';
+     var V11 = 'V11';
 
-        stop();
-        var storage10 = new Storage10();
-        storage10.set({k: K10, v: V10, success: function(data) {
-            ++i;
-            equal(data, V10);
-            storage10.get({k: K10, success: function(data) {
-                ++i;
-                equal(data, V10);
-                i === N && start();
-            }});
-        }});
+     stop();
+     var storage10 = new Storage10();
+     storage10.set({k: K10, v: V10, success: function(data) {
+     ++i;
+     equal(data, V10);
+     storage10.get({k: K10, success: function(data) {
+     ++i;
+     equal(data, V10);
+     i === N && start();
+     }});
+     }});
 
-        storage11.set({k: K11, v: V11, success: function(data) {
-            ++i;
-            equal(data, V11);
-            storage11.get({k: K11, success: function(data) {
-                ++i;
-                equal(data, V11);
-                i === N && start();
-            }});
-        }});
-    });*/
+     storage11.set({k: K11, v: V11, success: function(data) {
+     ++i;
+     equal(data, V11);
+     storage11.get({k: K11, success: function(data) {
+     ++i;
+     equal(data, V11);
+     i === N && start();
+     }});
+     }});
+     });*/
 
     test("remove/clear", function() {
         stop();

@@ -33,7 +33,6 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
         opt = opt || {};
         opt.token = +new Date + U.getRndStr(8);
         var proxy = opt.proxy || Conf.PROXY;
-        proxy = U.fm('{0}{1}{2}={3}', proxy, proxy.indexOf('?') > -1 ? '&' : '?', Conf.XD_TOKEN, opt.token);
         switch (proxy) {
             case 'tmall':
                 proxy = Conf.PROXY_TMALL;
@@ -45,6 +44,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
                 proxy = Conf.PROXY;
                 break;
         }
+        proxy = U.fm('{0}{1}{2}={3}', proxy, proxy.indexOf('?') > -1 ? '&' : '?', Conf.XD_TOKEN, opt.token);
         opt.proxy = proxy;
         opt.prefix = opt.prefix || '';
 
@@ -119,7 +119,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
 
                 setTimeout(function() {
                     initXd(false);
-                }, 100);
+                }, 600);
             }
 
             // @see iframe onload http://www.planabc.net/2009/09/22/iframe_onload/

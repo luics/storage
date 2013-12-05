@@ -1,13 +1,11 @@
 /**
- * iframe 跨域通信
+ * iframe 跨域通信 for storage
  * 基于 postMessage + window.name (IE 6、7)
- *
- * 注：这份代码的分割不同于工具栏其他代码，请不要奇怪，是为双十一之后快速迁移做准备
- *
- * @version 2.0
- * @date: 2013-09-11
- * @author: moming 1.0
+ * @author moming (墨冥) 1.0
  * @author luics (鬼道) 2.0
+ * @version 2.0
+ * @date 2013-09-11
+ * 
  *   0. IE6、7
  *     0. postMessage 封装
  *     0. IE6、7 实现队列机制，防止告诉通信的数据丢失问题

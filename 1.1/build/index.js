@@ -33,9 +33,8 @@ KISSY.add('gallery/storage/1.1/conf', function() {
         DEBUG_LOG: DEBUG_LOG,
         // 其他配置
         SAM_PV: 1 / 1000,
-        //SAM_PV: 1,
         TIMEOUT_STORAGE: 3 * 1000,
-        PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html',
+        PROXY: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
         PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
         // 用于标识 xd 实例
@@ -176,15 +175,13 @@ KISSY.add('gallery/storage/1.1/util', function(S, Conf) {
 ]});
 
 /**
- * iframe 跨域通信
+ * iframe 跨域通信 for storage
  * 基于 postMessage + window.name (IE 6、7)
- *
- * 注：这份代码的分割不同于工具栏其他代码，请不要奇怪，是为双十一之后快速迁移做准备
- *
- * @version 2.0
- * @date: 2013-09-11
- * @author: moming 1.0
+ * @author moming (墨冥) 1.0
  * @author luics (鬼道) 2.0
+ * @version 2.0
+ * @date 2013-09-11
+ * 
  *   0. IE6、7
  *     0. postMessage 封装
  *     0. IE6、7 实现队列机制，防止告诉通信的数据丢失问题
@@ -496,7 +493,6 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
         opt = opt || {};
         opt.token = +new Date + U.getRndStr(8);
         var proxy = opt.proxy || Conf.PROXY;
-        proxy = U.fm('{0}{1}{2}={3}', proxy, proxy.indexOf('?') > -1 ? '&' : '?', Conf.XD_TOKEN, opt.token);
         switch (proxy) {
             case 'tmall':
                 proxy = Conf.PROXY_TMALL;
@@ -508,6 +504,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
                 proxy = Conf.PROXY;
                 break;
         }
+        proxy = U.fm('{0}{1}{2}={3}', proxy, proxy.indexOf('?') > -1 ? '&' : '?', Conf.XD_TOKEN, opt.token);
         opt.proxy = proxy;
         opt.prefix = opt.prefix || '';
 
@@ -582,7 +579,7 @@ KISSY.add('gallery/storage/1.1/index', function(S, Event, JSON, Conf, U, XD) {
 
                 setTimeout(function() {
                     initXd(false);
-                }, 100);
+                }, 600);
             }
 
             // @see iframe onload http://www.planabc.net/2009/09/22/iframe_onload/
