@@ -34,11 +34,10 @@ KISSY.add('gallery/storage/1.0/conf', function(S) {
         DEBUG_LOG: DEBUG_LOG,
         // 其他配置
         SAM_PV: 1 / 1000,
-        //SAM_PV: 1,
         TIMEOUT_STORAGE: 3 * 1000,
-        PROXY: 'http://a.tbcdn.cn/s/kissy/gallery/storage/1.0/proxy.html',
-        PROXY_TMALL: 'http://www.tmall.com/go/act/stp-tm.php',
-        PROXY_TAOBAO: 'http://www.taobao.com/go/act/stp-tb.php',
+        PROXY: 'http://www.tmall.com/go/act/stp-ga-1_0.php',
+        PROXY_TMALL: 'http://www.tmall.com/go/act/stp-ga-1_0.php',
+        PROXY_TAOBAO: 'http://www.tmall.com/go/act/stp-ga-1_0.php',
         M: {
             G: MINER + '&t=g',
             P: MINER + '&t=p'
@@ -54,6 +53,7 @@ KISSY.add('gallery/storage/1.0/conf', function(S) {
             IFRAME: 'iframe',
             ONLOAD: 'onload',
             XD: 'xd',
+            TOKEN: 'token',
             XD_TIMEOUT: 'xdTimeout',
             IFRAME_TIMEOUT: 'iframeTimeout',
             PROXY: 'proxy',
@@ -462,7 +462,8 @@ KISSY.add('gallery/storage/1.0/index', function(S, Event, JSON, Conf, U, XD) {
 
     };
     var guid = 0;
-    var instance = 0;
+    var instanceCount = 0;
+    var instance;
 
     /**
      * Storage Class
@@ -474,12 +475,13 @@ KISSY.add('gallery/storage/1.0/index', function(S, Event, JSON, Conf, U, XD) {
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
-        if (++instance > 1) {
+        if (++instanceCount > 1) {
             //throw 'storage is a singleton';
-            return;
+            return instance;
         }
 
         var me = this;
+        instance = me;
         opt = opt || {};
         var proxy = opt.proxy || Conf.PROXY;
         switch (proxy) {

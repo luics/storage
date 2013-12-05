@@ -32,7 +32,7 @@ KISSY.add('gallery/storage/1.0/index', function(S, Event, JSON, Conf, U, XD) {
      * @param {number} [opt.xdTimeout]
      */
     var Storage = function(opt) {
-        if (++instance > 1) {
+        if (++instanceCount > 1) {
             //throw 'storage is a singleton';
             return instance;
         }
