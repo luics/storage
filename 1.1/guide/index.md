@@ -1,5 +1,7 @@
 ## 综述
 
+> 请加旺旺交流群群 1227264062
+
 storage 是跨终端、跨域的存储组件：
 
 0. 兼容 IE 6+；Chrome、Firefox、Safari
