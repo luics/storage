@@ -85,10 +85,10 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 
 0. `prefix` key 前缀，详见下文“推荐命名”
 0. `proxy` 数据存储在代理页所在的域，选择不同的代理页可以让数据存储在不同的域下
-    0. `common`：(默认) http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html 
+    0. `common`：(默认) http://www.tmall.com/go/act/stp-tm.php 
     0. `tmall`：http://www.tmall.com/go/act/stp-tm.php
     0. `taobao`：http://www.taobao.com/go/act/stp-tb.php
-    0. `{proxy-url}`：[proxy 页面](http://a.tbcdn.cn/s/kissy/gallery/storage/1.1/proxy.html) 部署在特定域名下的 URL
+    0. `{proxy-url}`：[proxy 页面](http://www.tmall.com/go/act/stp-tm.php) 部署在特定域名下的 URL
 0. `onload` 代理页加载成功的回调    
 
 ## 推荐命名
@@ -120,3 +120,15 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 
 0. 代理页部署至特定服务器、服务器端控制访问来源
 0. 实例化 Storage 设置代理页地址参数`proxy`
+
+目前 Storage 部署在 TMS 下的 proxy 均有服务器端一级域白名单过滤，保证数据不被集团以外站点访问：
+
+    'tmall.com', 'tmall.hk', 'taobao.com', 'taobaocdn.com', 'tbcdn.cn',
+    '1688.com', 'alibaba.com', 'aliyun.com', 'alipay.com', 'alisoft.com', 'alimama.com', 
+    'hitao.com', 'aliexpress.com', 'laiwang.com', 'etao.com', 'kissyui.com', 
+    
+    'tmall.net', 'tmall.com.hk', 'taobao.net', 'taobao.org', 'alibaba-inc.com',
+    '1688.net', 'alibaba.net', 'aliyun.net', 'alipay.net', 'alisoft.net', 'alimama.net', 
+    'hitao.net', 'aliexpress.net', 'laiwang.net', 'etao.net'
+    
+如需自行部署 proxy，请联系 @鬼道 协助处理白名单。
