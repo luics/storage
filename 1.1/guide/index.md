@@ -121,14 +121,4 @@ S.use('gallery/storage/1.1/index', function (S, Storage) {
 0. 代理页部署至特定服务器、服务器端控制访问来源
 0. 实例化 Storage 设置代理页地址参数`proxy`
 
-目前 Storage 部署在 TMS 下的 proxy 均有服务器端一级域白名单过滤，保证数据不被集团以外站点访问：
-
-    'tmall.com', 'tmall.hk', 'taobao.com', 'taobaocdn.com', 'tbcdn.cn',
-    '1688.com', 'alibaba.com', 'aliyun.com', 'alipay.com', 'alisoft.com', 'alimama.com', 
-    'hitao.com', 'aliexpress.com', 'laiwang.com', 'etao.com', 'kissyui.com', 
-    
-    'tmall.net', 'tmall.com.hk', 'taobao.net', 'taobao.org', 'alibaba-inc.com',
-    '1688.net', 'alibaba.net', 'aliyun.net', 'alipay.net', 'alisoft.net', 'alimama.net', 
-    'hitao.net', 'aliexpress.net', 'laiwang.net', 'etao.net'
-    
-如需自行部署 proxy，请联系 @鬼道 协助处理白名单。
+目前 Storage 部署在 TMS 下的 proxy 均有服务器端一级域白名单过滤，保证数据不被集团以外站点访问。如需改动白名单或自行部署 proxy，请联系 @鬼道 协助处理。
