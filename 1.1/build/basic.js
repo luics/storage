@@ -49,7 +49,8 @@ KISSY.add('gallery/storage/1.1/basic', function(S, JSON) {
         }
         store.getAll = function() {
         }
-
+        store.key = function(index) {
+        }
         store.serialize = function(value) {
             return JSON.stringify(value)
         }
@@ -102,6 +103,9 @@ KISSY.add('gallery/storage/1.1/basic', function(S, JSON) {
                     ret[key] = store.get(key)
                 }
                 return ret
+            }
+            store.key = function(index) {
+                return storage.key(index);
             }
         }
         else if (doc.documentElement.addBehavior) {
@@ -195,16 +199,31 @@ KISSY.add('gallery/storage/1.1/basic', function(S, JSON) {
                 }
                 return ret
             })
+            store.key = withIEStorage(function(storage, index) {
+                var keys = []
+                store.forEach(function(key, val) {
+                    keys.push(key)
+                })
+                return keys[index]
+            })
         }
 
         //alert(namespace + '-' + store.get(namespace));
         try {
-            store.set(namespace, namespace)
-            //alert(namespace + '-' + store.get(namespace));
-            if (store.get(namespace) != namespace) {
-                store.disabled = true
+            //精确检测，防止我们自己cache大于storage的上限以后,检测不准
+            var tempKey = store.key(0)
+            var tempData = store.get(tempKey)
+            if(tempKey) {
+                store.remove(tempKey)
+                store.set(tempKey, tempData)
+            } else {
+                store.set(namespace, namespace)
+                //alert(namespace + '-' + store.get(namespace));
+                if (store.get(namespace) != namespace) {
+                    store.disabled = true
+                }
+                store.remove(namespace)
             }
-            store.remove(namespace)
         } catch (e) {
             store.disabled = true
         }
@@ -224,4 +243,3 @@ KISSY.add('gallery/storage/1.1/basic', function(S, JSON) {
 }, {
     requires: ['json']
 });
-
